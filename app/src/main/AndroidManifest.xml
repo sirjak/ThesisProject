@@ -15,6 +15,9 @@
     <uses-feature
         android:name="android.hardware.camera.ar"
         android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:name=".MyApp"
@@ -30,17 +33,17 @@
         <activity
             android:name=".activities.ArtInfoActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/Theme.ARMuseumProject.PopupTheme" />
         <activity
             android:name=".activities.SelectDepartmentActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/Theme.ARMuseumProject.PopupTheme" />
         <activity
             android:name=".activities.PopupActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:theme="@style/Theme.ARMuseumProject.PopupTheme" />
 
         <meta-data

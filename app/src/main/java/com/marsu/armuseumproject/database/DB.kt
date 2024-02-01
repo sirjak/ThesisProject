@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 /**
  * Database initialization and link for accessing DAO.
  */
-@Database(entities = [Artwork::class], version = 2)
+@Database(entities = [Artwork::class], version = 2, exportSchema = false)
 abstract class ArtDB : RoomDatabase() {
     abstract fun artDao(): ArtworkDAO
 
