@@ -43,7 +43,7 @@ class ArtInfoActivity : PopupActivity() {
                 .centerCrop()
                 .error(R.drawable.ic_not_found_vector)
                 .into(binding.artImageLarge)
-            Log.d("onBindViewHolder", "image loaded succesfully")
+            Log.d("onBindViewHolder", "image loaded successfully")
         } catch (e: Exception) {
             Log.d("Exception when loading image", e.message.toString())
         }

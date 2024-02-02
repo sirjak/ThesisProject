@@ -1,4 +1,4 @@
-package com.marsu.armuseumproject
+package com.marsu.armuseumproject.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

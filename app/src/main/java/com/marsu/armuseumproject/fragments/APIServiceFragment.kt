@@ -64,7 +64,7 @@ class APIServiceFragment : Fragment() {
         }
 
         // Enter key
-        binding.apiSearchInput.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+        binding.apiSearchInput.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                 apiServiceViewModel.searchArtsWithInput()
                 closeKeyboard()

@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
-import com.marsu.armuseumproject.SelectFromGalleryViewModel
+import com.marsu.armuseumproject.viewmodels.SelectFromGalleryViewModel
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.databinding.FragmentSelectFromGalleryBinding
 import com.marsu.armuseumproject.service.InternalStorageService
@@ -31,7 +31,6 @@ const val REQUEST_CODE = 200
 class SelectFromGallery : Fragment() {
     private var entryId: Int = 0
     private var resultUri: Uri? = null
-    private var imageUri: Uri? = null
     private var _binding: FragmentSelectFromGalleryBinding? = null
     private val binding get() = _binding!!
 
@@ -43,7 +42,7 @@ class SelectFromGallery : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         entryId = UUID.randomUUID().hashCode() * -1
         _binding = FragmentSelectFromGalleryBinding.inflate(inflater, container, false)
         viewModel = SelectFromGalleryViewModel()
