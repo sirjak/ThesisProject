@@ -136,6 +136,7 @@ class SelectFromGallery : Fragment() {
     /**
      * Check if adding image was successful and if so, display the image in the preview ImageView
      */
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val imgView: ImageView = binding.imageFromGallery
