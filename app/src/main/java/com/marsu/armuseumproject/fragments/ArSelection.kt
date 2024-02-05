@@ -33,7 +33,7 @@ class ArSelection : Fragment() {
     private lateinit var arSelectionViewModel: ArSelectionViewModel
     private lateinit var adapter: ArSelectionAdapter
     private lateinit var layoutManager: LinearLayoutManager
-    private var _binding: FragmentArSelectionBinding? = null;
+    private var _binding: FragmentArSelectionBinding? = null
     private val binding get() = _binding!!
     private var lastFive = mutableListOf<Int>() // initiate variable
 
@@ -55,7 +55,7 @@ class ArSelection : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         arSelectionViewModel = ArSelectionViewModel(requireActivity().application)
         arSelectionViewModel.imageUri.observe(viewLifecycleOwner) {
             Log.d("URI", it.toString())
@@ -70,7 +70,7 @@ class ArSelection : Fragment() {
         val json = sharedPreferences?.getString(SHARED_KEY, null)
         val type: Type = object : TypeToken<List<Int>>() {}.type
         if (json != null) {
-            lastFive = Gson().fromJson<MutableList<Int>>(json, type)
+            lastFive = Gson().fromJson(json, type)
         }
 
         binding.startArButton.setOnClickListener { navigateToArActivity(view) }

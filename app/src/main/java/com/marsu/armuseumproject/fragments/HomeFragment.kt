@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewModel = HomeViewModel(requireActivity().application)
         // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -60,17 +60,17 @@ class HomeFragment : Fragment() {
         val json = sharedPreferences?.getString(SHARED_KEY, null)
         val type: Type = object : TypeToken<List<Int>>() {}.type
         if (json != null) {
-            lastFive = Gson().fromJson<MutableList<Int>>(json, type)
+            lastFive = Gson().fromJson(json, type)
         }
 
         // Checking if lastFive has anything in it
-        // If not, showing instructions text instead of most recents.
+        // If not, showing instructions text instead of most recent artworks.
         if (lastFive.isEmpty()) {
             binding.homeIntro.text = getString(R.string.home_intro)
         }
 
         // Getting the artwork objects by id's collected in lastFive and sending info to recycler adapter
-        var collectedLastFive: List<Artwork> = listOf()
+        val collectedLastFive: MutableList<Artwork> = mutableListOf()
         for (i in lastFive.indices) {
             viewModel.getArt(lastFive[i]).observe(viewLifecycleOwner) { item ->
                 item.let {

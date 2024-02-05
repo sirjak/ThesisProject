@@ -50,7 +50,7 @@ class ApiServiceAdapter : RecyclerView.Adapter<ApiServiceAdapter.ApiServiceViewH
                 .centerCrop()
                 .error(R.drawable.ic_not_found_vector)
                 .into(holder.binding.artThumbnail)
-            Log.d("onBindViewHolder", "image loaded succesfully")
+            Log.d("onBindViewHolder", "image loaded successfully")
         } catch (e: Exception) {
             Log.d("Exception when loading image", e.message.toString())
         }

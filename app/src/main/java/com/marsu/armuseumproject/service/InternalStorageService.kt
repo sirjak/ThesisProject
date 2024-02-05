@@ -80,7 +80,7 @@ object InternalStorageService {
      */
     private fun saveFileToInternalStorage(url: URL): String {
 
-        var id: Int? = UUID.randomUUID().hashCode() * -1
+        val id: Int = UUID.randomUUID().hashCode() * -1
         var newDir = "$dir/$id.png"
 
         var inputStream: InputStream? = null

@@ -14,7 +14,7 @@ class ArActivityViewModel(application: Application) : AndroidViewModel(applicati
     val isPhoneUpright = MutableLiveData(false)
 
     // Calculate if phone is upright
-    fun calculateGravityData(x: Float, y: Float, g: Float) {
+    fun calculateGravityData(y: Float) {
         isPhoneUpright.value = y > 9.4 && y < 10
     }
 

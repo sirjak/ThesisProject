@@ -12,7 +12,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.navigation.navArgs
 import com.google.ar.core.HitResult
 import com.google.ar.sceneform.AnchorNode
@@ -58,13 +57,13 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
         setContentView(view)
 
         // Enable image deletion and hide planeRenderer if there is an image on the screen
-        arActivityViewModel.currentImageNode.observe(this, Observer {
+        arActivityViewModel.currentImageNode.observe(this) {
             binding.arDeleteButton.isEnabled = it != null
             arFrag.arSceneView.planeRenderer.isVisible = it == null
-        })
+        }
 
         // Observe whether phone is held upright and enable/disable adding images accordingly
-        arActivityViewModel.isPhoneUpright.observe(this, Observer {
+        arActivityViewModel.isPhoneUpright.observe(this) {
             if (this::arFrag.isInitialized) {
                 if (it) {
                     binding.arGravityAlert.isVisible = false
@@ -78,7 +77,7 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
                     }
                 }
             }
-        })
+        }
 
         val uri = args.imageUri.toUri()
 
@@ -146,7 +145,7 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
     private fun registerSensor(sensorManager: SensorManager, sensor: Sensor?) {
         if (sensor != null) {
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
-            Log.d("SENSOR_GRAVITY", "Registered listener to sensor succesfully!")
+            Log.d("SENSOR_GRAVITY", "Registered listener to sensor successfully!")
         } else {
             Log.d("SENSOR_GRAVITY", "Failed to register listener to sensor!")
         }
@@ -158,9 +157,7 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
     override fun onSensorChanged(p0: SensorEvent?) {
         Log.d("ON_SENSOR_CHANGED", p0?.values.contentToString())
         arActivityViewModel.calculateGravityData(
-            p0?.values?.get(0) ?: 0.0F,
-            p0?.values?.get(1) ?: 0.0F,
-            p0?.values?.get(2) ?: 0.0F
+            p0?.values?.get(1) ?: 0.0F
         )
     }
 

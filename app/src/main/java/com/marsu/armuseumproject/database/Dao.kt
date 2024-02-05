@@ -8,7 +8,7 @@ import androidx.room.*
  */
 @Dao
 interface ArtworkDAO {
-    // Adds arwork to DB
+    // Adds artwork to DB
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addArtwork(art: Artwork)
 
