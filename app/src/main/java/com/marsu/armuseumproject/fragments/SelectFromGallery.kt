@@ -1,7 +1,6 @@
 package com.marsu.armuseumproject.fragments
 
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,18 +8,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.databinding.DataBindingUtil
+import coil.compose.rememberAsyncImagePainter
 import com.google.android.material.textfield.TextInputEditText
-import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.viewmodels.SelectFromGalleryViewModel
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.databinding.FragmentSelectFromGalleryBinding
-import com.marsu.armuseumproject.service.InternalStorageService
 import java.util.*
 
 /**
@@ -30,9 +45,6 @@ import java.util.*
 class SelectFromGallery : Fragment() {
     private var entryId: Int = 0
     private var resultUri: Uri? = null
-    private var _binding: FragmentSelectFromGalleryBinding? = null
-    private val binding get() = _binding!!
-
 
     companion object {
         private lateinit var viewModel: SelectFromGalleryViewModel
@@ -43,62 +55,58 @@ class SelectFromGallery : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         entryId = UUID.randomUUID().hashCode() * -1
-        _binding = FragmentSelectFromGalleryBinding.inflate(inflater, container, false)
-        viewModel = SelectFromGalleryViewModel()
-
-        val view = binding.root
-        val saveButton: Button = binding.saveButton
-        val titleEditText = binding.inputTitle
-        val artistEditText = binding.inputArtist
-        val imgView = binding.imageFromGallery
-        val constraint = binding.ConstraintLayout
-
-        imgView.setImageResource(R.drawable.ic_baseline_add_a_photo_24)
-
-        constraint.setOnClickListener {
-            clearFocuses(
-                titleEditText,
-                artistEditText,
-                constraint
-            )
-        }
-
-        imgView.setOnClickListener {
-            openGalleryForImage()
-        }
-
-        saveButton.setOnClickListener {
-            if (resultUri == null || titleEditText.text.toString() == "") {
-                Toast.makeText(
-                    MyApp.appContext,
-                    getString(R.string.pickImageToast),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                val newUri = InternalStorageService.saveFileToInternalStorage(resultUri)
-                insertToDatabase(
-                    viewModel,
-                    newUri,
-                    titleEditText.text.toString(),
-                    artistEditText.text.toString()
-                )
-                clearEditTexts(
-                    titleEditText,
-                    artistEditText,
-                    imgView
-                )
+        val binding = DataBindingUtil.inflate<FragmentSelectFromGalleryBinding>(
+            inflater,
+            R.layout.fragment_select_from_gallery,
+            container,
+            false
+        ).apply {
+            composeView.setContent {
+                MaterialTheme {
+                    SelectFromGalleryScreen()
+                }
             }
         }
+        viewModel = SelectFromGalleryViewModel()
 
-        return view
+//        val saveButton: Button = binding.saveButton
+//        val titleEditText = binding.inputTitle
+//        val artistEditText = binding.inputArtist
+//        val constraint = binding.ConstraintLayout
+//
+//        constraint.setOnClickListener {
+//            clearFocuses(
+//                titleEditText,
+//                artistEditText,
+//                constraint
+//            )
+//        }
+//
+//        saveButton.setOnClickListener {
+//            if (resultUri == null || titleEditText.text.toString() == "") {
+//                Toast.makeText(
+//                    MyApp.appContext,
+//                    getString(R.string.pickImageToast),
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            } else {
+//                val newUri = InternalStorageService.saveFileToInternalStorage(resultUri)
+//                insertToDatabase(
+//                    viewModel,
+//                    newUri,
+//                    titleEditText.text.toString(),
+//                    artistEditText.text.toString()
+//                )
+//                clearEditTexts(
+//                    titleEditText,
+//                    artistEditText,
+//                    imgView
+//                )
+//            }
+//        }
+
+        return binding.root
     }
-
-    private fun openGalleryForImage() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
-        getResult.launch(intent)
-    }
-
 
     private fun insertToDatabase(
         viewModel: SelectFromGalleryViewModel,
@@ -132,17 +140,6 @@ class SelectFromGallery : Fragment() {
         resultUri = null
     }
 
-    /**
-     * Check if adding image was successful and if so, display the image in the preview ImageView
-     */
-    private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        val imgView: ImageView = binding.imageFromGallery
-        if (it.resultCode == AppCompatActivity.RESULT_OK) {
-            resultUri = it.data?.data
-            imgView.setImageURI(resultUri)
-        }
-    }
-
     private fun closeKeyBoard(view: View) {
         val imm: InputMethodManager =
             view.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -160,5 +157,51 @@ class SelectFromGallery : Fragment() {
         title.clearFocus()
         artist.clearFocus()
         closeKeyBoard(view)
+    }
+}
+
+@Composable
+fun SelectFromGalleryScreen() {
+
+    val defaultImage = painterResource(id = R.drawable.ic_baseline_add_a_photo_24)
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+
+    /**
+     * Open selection from gallery and set selected image to imageUri
+     */
+    val openGallery = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {
+            imageUri = it
+        }
+    )
+
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        /**
+         * Image selection
+         */
+        IconButton(
+            content = {
+                Image(painter = if (imageUri != null) rememberAsyncImagePainter(imageUri) else defaultImage, contentDescription = null, modifier = Modifier.size(height = 250.dp, width = 250.dp))
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .size(height = 250.dp, width = 250.dp),
+            onClick = {
+                openGallery.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            }
+        )
+        /**
+         * TODO: Add TextInputs for image name and artist
+         */
+
+        /**
+         * TODO: Add Save button
+         */
     }
 }
