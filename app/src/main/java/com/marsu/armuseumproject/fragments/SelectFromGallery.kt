@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.marsu.armuseumproject.MyApp
@@ -21,8 +22,6 @@ import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.databinding.FragmentSelectFromGalleryBinding
 import com.marsu.armuseumproject.service.InternalStorageService
 import java.util.*
-
-const val REQUEST_CODE = 200
 
 /**
  * Fragment for adding custom artwork to the application. Has two input fields for the title and author,
@@ -97,7 +96,7 @@ class SelectFromGallery : Fragment() {
     private fun openGalleryForImage() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
-        startActivityForResult(intent, REQUEST_CODE)
+        getResult.launch(intent)
     }
 
 
@@ -136,12 +135,10 @@ class SelectFromGallery : Fragment() {
     /**
      * Check if adding image was successful and if so, display the image in the preview ImageView
      */
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         val imgView: ImageView = binding.imageFromGallery
-        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == REQUEST_CODE) {
-            resultUri = data?.data
+        if (it.resultCode == AppCompatActivity.RESULT_OK) {
+            resultUri = it.data?.data
             imgView.setImageURI(resultUri)
         }
     }
