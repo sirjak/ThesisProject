@@ -12,7 +12,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
@@ -108,7 +110,7 @@ fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lif
         )
         Toast.makeText(MyApp.appContext, "Image saved", Toast.LENGTH_SHORT).show()
     }
-
+    // TODO: Implement clearing focus/closing keyboard when user clicks outside TextField
     /* fun closeKeyBoard(view: View) {
         val imm: InputMethodManager =
             view.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -154,32 +156,42 @@ fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lif
             supportingText = { Text(text = "* required") },
             value = imageTitle
         )
+        Spacer(modifier = Modifier.padding(vertical = 10.dp))
         OutlinedTextField(
             label = { Text(text = stringResource(id = R.string.artist)) },
             onValueChange = { imageArtist = it },
             value = imageArtist
         )
+
+    }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom
+    ) {
         /**
          * Save button
          */
-        Button(onClick = {
-            if (imageUri == null || imageTitle == "") {
-                Toast.makeText(
-                    MyApp.appContext,
-                    toastText,
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                entryId = UUID.randomUUID().hashCode() * -1
-                insertToDatabase(
-                    viewModel,
-                    imageUri,
-                    imageTitle,
-                    imageArtist
-                )
-                clearTextFields()
+        Button(
+            modifier = Modifier.padding(bottom = 35.dp),
+            onClick = {
+                if (imageUri == null || imageTitle == "") {
+                    Toast.makeText(
+                        MyApp.appContext,
+                        toastText,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    entryId = UUID.randomUUID().hashCode() * -1
+                    insertToDatabase(
+                        viewModel,
+                        imageUri,
+                        imageTitle,
+                        imageArtist
+                    )
+                    clearTextFields()
+                }
             }
-        }) {
+        ) {
             Text(text = stringResource(id = R.string.saveButton))
         }
     }
