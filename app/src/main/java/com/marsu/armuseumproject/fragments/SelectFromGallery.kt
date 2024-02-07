@@ -3,6 +3,7 @@ package com.marsu.armuseumproject.fragments
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -172,7 +173,7 @@ fun SelectFromGalleryScreen() {
     val openGallery = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {
-            imageUri = it
+            if (it !== null) imageUri = it
         }
     )
 
