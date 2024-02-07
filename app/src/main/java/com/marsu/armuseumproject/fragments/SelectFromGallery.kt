@@ -1,27 +1,24 @@
 package com.marsu.armuseumproject.fragments
 
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,15 +30,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import coil.compose.rememberAsyncImagePainter
-import com.google.android.material.textfield.TextInputEditText
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
-import com.marsu.armuseumproject.viewmodels.SelectFromGalleryViewModel
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.databinding.FragmentSelectFromGalleryBinding
-import com.marsu.armuseumproject.service.InternalStorageService
-import java.util.*
+import com.marsu.armuseumproject.viewmodels.SelectFromGalleryViewModel
+import java.util.UUID
 
 /**
  * Fragment for adding custom artwork to the application. Has two input fields for the title and author,
@@ -77,13 +73,11 @@ class SelectFromGallery : Fragment() {
 fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
 
     val defaultImage = painterResource(id = R.drawable.ic_baseline_add_a_photo_24)
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    var imageTitle by remember { mutableStateOf("") }
-    var imageArtist by remember { mutableStateOf("") }
     var entryId = 0
-
+    var imageArtist by remember { mutableStateOf("") }
+    var imageTitle by remember { mutableStateOf("") }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
     val toastText = stringResource(id = R.string.pickImageToast)
-
 
     /**
      * Open selection from gallery and set selected image to imageUri
@@ -165,7 +159,6 @@ fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lif
             onValueChange = { imageArtist = it },
             value = imageArtist
         )
-
         /**
          * Save button
          */
