@@ -38,6 +38,7 @@ import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.databinding.FragmentSelectFromGalleryBinding
+import com.marsu.armuseumproject.service.InternalStorageService
 import com.marsu.armuseumproject.viewmodels.SelectFromGalleryViewModel
 import java.util.UUID
 
@@ -181,10 +182,11 @@ fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lif
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
+                    val newUri = InternalStorageService.saveFileToInternalStorage(imageUri)
                     entryId = UUID.randomUUID().hashCode() * -1
                     insertToDatabase(
                         viewModel,
-                        imageUri,
+                        newUri,
                         imageTitle,
                         imageArtist
                     )
