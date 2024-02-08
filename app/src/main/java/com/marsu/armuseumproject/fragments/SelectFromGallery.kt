@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -62,9 +63,12 @@ class SelectFromGallery : Fragment() {
             container,
             false
         ).apply {
-            composeView.setContent {
-                MaterialTheme {
-                    SelectFromGalleryScreen(viewModel = viewModel)
+            composeView.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    MaterialTheme {
+                        SelectFromGalleryScreen(viewModel = viewModel)
+                    }
                 }
             }
         }
