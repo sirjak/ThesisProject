@@ -1,21 +1,18 @@
 package com.marsu.armuseumproject.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
-import com.marsu.armuseumproject.adapters.ArSelectionAdapter
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.databinding.FragmentArSelectionBinding
 import com.marsu.armuseumproject.screens.ArSelectionScreen
@@ -34,8 +31,6 @@ const val SHARED_KEY = "LAST_FIVE"
 class ArSelection : Fragment() {
 
     private lateinit var arSelectionViewModel: ArSelectionViewModel
-    private lateinit var adapter: ArSelectionAdapter
-    private lateinit var layoutManager: LinearLayoutManager
     private var lastFive = mutableListOf<Int>() // initiate variable
 
     private val args: ArSelectionArgs by navArgs()
@@ -73,29 +68,19 @@ class ArSelection : Fragment() {
             container,
             false
         ).apply {
-            composeView.setContent {
-                MaterialTheme {
-                    ArSelectionScreen(lastFive = lastFive, viewModel = arSelectionViewModel)
+            composeView.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    MaterialTheme {
+                        ArSelectionScreen(
+                            lastFive = lastFive,
+                            viewModel = arSelectionViewModel
+                        )
+                    }
                 }
             }
         }
-        //val view = binding.root
-
-        //binding.startArButton.setOnClickListener { navigateToArActivity(view) }
 
         return binding.root
     }
-
-    // Navigate to the AR Activity with the selected artwork's image URI as a navigation argument,
-    // and also saves the selected artwork to the most recent list
-    /*private fun navigateToArActivity(v: View) {
-        val id = arSelectionViewModel.imageId.value
-        if (id != null) {
-            addToList(id)
-            addToSharedPrefs()
-        }
-        val uri = arSelectionViewModel.imageUri.value.toString()
-        val action = ArSelectionDirections.actionArSelectionToArActivity(uri)
-        v.findNavController().navigate(action)
-    }*/
 }

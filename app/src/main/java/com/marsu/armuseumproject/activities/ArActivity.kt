@@ -79,7 +79,10 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
             }
         }
 
-        val uri = args.imageUri.toUri()
+        //val uri = args.imageUri.toUri()
+        //Log.d("ARGS", args.toString())
+        val uri = arActivityViewModel.imageUri.value
+        Log.d("URI", uri.toString())
 
         binding.arBackButton.setOnClickListener { onBackPressed() }
         binding.arDeleteButton.setOnClickListener { deleteImage() }

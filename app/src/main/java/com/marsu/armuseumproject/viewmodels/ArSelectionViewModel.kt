@@ -12,7 +12,7 @@ import com.marsu.armuseumproject.database.Artwork
  * ViewModel for the AR Selection Fragment, retrieves the artwork from the Room database to display
  * in the RecyclerView
  */
-class ArSelectionViewModel(application: Application): AndroidViewModel(application) {
+open class ArSelectionViewModel(application: Application): AndroidViewModel(application) {
     private val database = ArtDB.get(application.applicationContext)
 
     val imageUri = MutableLiveData<Uri?>(null)

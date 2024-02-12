@@ -1,6 +1,7 @@
 package com.marsu.armuseumproject.screens
 
 import android.app.Application
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -26,24 +27,36 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
+import com.marsu.armuseumproject.activities.ArActivity
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.fragments.SHARED_KEY
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.ui_components.ArtItem
 import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
+import java.lang.reflect.Type
 
 class ArSelectionScreen : ComponentActivity() {
     private lateinit var arSelectionViewModel: ArSelectionViewModel
+    private var lastFive = mutableListOf<Int>() // initiate variable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arSelectionViewModel = ArSelectionViewModel(Application())
+
+        val preferences = PreferencesManager(MyApp.appContext)
+        val json = preferences.getData(SHARED_KEY, null)
+        val type: Type = object : TypeToken<List<Int>>() {}.type
+        if (json != null) {
+            lastFive = Gson().fromJson(json, type)
+        }
 
         setContent {
             ARMuseumProjectTheme {
@@ -52,7 +65,7 @@ class ArSelectionScreen : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //ArSelectionScreen(arSelectionViewModel)
+                    ArSelectionScreen(lastFive, arSelectionViewModel)
                 }
             }
         }
@@ -62,6 +75,7 @@ class ArSelectionScreen : ComponentActivity() {
 @Composable
 fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewModel) {
     val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
+    val context = LocalContext.current
 
     val artworks by viewModel.getAllArtwork.observeAsState()
 
@@ -135,6 +149,7 @@ fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewMode
                     addToList(id)
                     addToSharedPrefs()
                 }
+                context.startActivity(Intent(context, ArActivity::class.java))
             },
             modifier = Modifier.padding(all = 20.dp)
         ) {
