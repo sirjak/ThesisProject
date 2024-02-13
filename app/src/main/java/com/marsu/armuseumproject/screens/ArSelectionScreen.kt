@@ -120,7 +120,7 @@ fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewMode
         verticalArrangement = Arrangement.Top
     ) {
         artworks?.let {
-            itemsIndexed(it) { index, art ->
+            itemsIndexed(it) { _, art ->
                 ArtItem(art = art, modifier = Modifier
                     .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                     .clickable {
