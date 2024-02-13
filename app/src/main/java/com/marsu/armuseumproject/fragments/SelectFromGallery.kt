@@ -13,13 +13,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,6 +41,7 @@ import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.databinding.FragmentSelectFromGalleryBinding
 import com.marsu.armuseumproject.service.InternalStorageService
+import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.viewmodels.SelectFromGalleryViewModel
 import java.util.UUID
 
@@ -53,21 +55,21 @@ class SelectFromGallery : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         viewModel = SelectFromGalleryViewModel()
         val binding = DataBindingUtil.inflate<FragmentSelectFromGalleryBinding>(
-            inflater,
-            R.layout.fragment_select_from_gallery,
-            container,
-            false
+            inflater, R.layout.fragment_select_from_gallery, container, false
         ).apply {
             composeView.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    MaterialTheme {
-                        SelectFromGalleryScreen(viewModel = viewModel)
+                    ARMuseumProjectTheme {
+                        Surface(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            SelectFromGalleryScreen(viewModel = viewModel)
+                        }
                     }
                 }
             }
@@ -93,8 +95,7 @@ fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lif
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {
             if (it !== null) imageUri = it
-        }
-    )
+        })
 
     fun insertToDatabase(
         viewModel: SelectFromGalleryViewModel,
@@ -104,13 +105,7 @@ fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lif
     ) {
         viewModel.insertImage(
             Artwork(
-                entryId,
-                uri.toString(),
-                uri.toString(),
-                "",
-                title,
-                artist,
-                ""
+                entryId, uri.toString(), uri.toString(), "", title, artist, ""
             )
         )
         Toast.makeText(MyApp.appContext, "Image saved", Toast.LENGTH_SHORT).show()
@@ -129,75 +124,59 @@ fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lif
     }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top
     ) {
         /**
          * Image selection
          */
-        IconButton(
-            content = {
-                Image(
-                    painter = if (imageUri != null) rememberAsyncImagePainter(imageUri) else defaultImage,
-                    contentDescription = null,
-                    modifier = Modifier.size(height = 250.dp, width = 250.dp)
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .size(height = 250.dp, width = 250.dp),
-            onClick = {
-                openGallery.launch(
-                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                )
-            }
-        )
+        IconButton(content = {
+            Image(
+                painter = if (imageUri != null) rememberAsyncImagePainter(imageUri) else defaultImage,
+                contentDescription = null,
+                modifier = Modifier.size(height = 250.dp, width = 250.dp)
+            )
+        }, modifier = Modifier
+            .fillMaxWidth()
+            .size(height = 250.dp, width = 250.dp), onClick = {
+            openGallery.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+        })
         /**
          * Image info
          */
-        OutlinedTextField(
-            label = { Text(text = stringResource(id = R.string.title)) },
+        OutlinedTextField(label = { Text(text = stringResource(id = R.string.title)) },
             onValueChange = { imageTitle = it },
             supportingText = { Text(text = "* required") },
             value = imageTitle
         )
         Spacer(modifier = Modifier.padding(vertical = 10.dp))
-        OutlinedTextField(
-            label = { Text(text = stringResource(id = R.string.artist)) },
+        OutlinedTextField(label = { Text(text = stringResource(id = R.string.artist)) },
             onValueChange = { imageArtist = it },
             value = imageArtist
         )
 
     }
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Bottom
     ) {
         /**
          * Save button
          */
-        Button(
-            modifier = Modifier.padding(bottom = 35.dp),
-            onClick = {
-                if (imageUri == null || imageTitle == "") {
-                    Toast.makeText(
-                        MyApp.appContext,
-                        toastText,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    val newUri = InternalStorageService.saveFileToInternalStorage(imageUri)
-                    entryId = UUID.randomUUID().hashCode() * -1
-                    insertToDatabase(
-                        viewModel,
-                        newUri,
-                        imageTitle,
-                        imageArtist
-                    )
-                    clearTextFields()
-                }
+        Button(modifier = Modifier.padding(bottom = 35.dp), onClick = {
+            if (imageUri == null || imageTitle == "") {
+                Toast.makeText(
+                    MyApp.appContext, toastText, Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                val newUri = InternalStorageService.saveFileToInternalStorage(imageUri)
+                entryId = UUID.randomUUID().hashCode() * -1
+                insertToDatabase(
+                    viewModel, newUri, imageTitle, imageArtist
+                )
+                clearTextFields()
             }
-        ) {
+        }) {
             Text(text = stringResource(id = R.string.saveButton))
         }
     }
