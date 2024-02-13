@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -16,6 +19,7 @@ import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.databinding.FragmentArSelectionBinding
 import com.marsu.armuseumproject.screens.ArSelectionScreen
+import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
 import java.lang.reflect.Type
 
@@ -71,11 +75,16 @@ class ArSelection : Fragment() {
             composeView.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    MaterialTheme {
-                        ArSelectionScreen(
-                            lastFive = lastFive,
-                            viewModel = arSelectionViewModel
-                        )
+                    ARMuseumProjectTheme {
+                        Surface(
+                            color = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            ArSelectionScreen(
+                                lastFive = lastFive,
+                                viewModel = arSelectionViewModel
+                            )
+                        }
                     }
                 }
             }
