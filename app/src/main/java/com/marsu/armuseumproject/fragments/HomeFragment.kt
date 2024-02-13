@@ -73,7 +73,7 @@ class HomeFragment : Fragment() {
         }
         return binding.root
     }
-    // TODO: Figure out if what this part does and if it should be kept
+    // TODO: Figure out what this part does and if it should be kept
     /*override fun onDestroyView() {
         super.onDestroyView()
         binding = null

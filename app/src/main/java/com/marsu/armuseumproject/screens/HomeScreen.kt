@@ -1,9 +1,7 @@
 package com.marsu.armuseumproject.screens
 
 import android.app.Application
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -22,7 +20,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,7 +27,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
-import com.marsu.armuseumproject.activities.ArActivity
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.fragments.SHARED_KEY
@@ -69,22 +65,18 @@ class HomeScreen : ComponentActivity() {
 
 @Composable
 fun HomeScreen(lastFive: MutableList<Int>, onNavigate: (Int) -> Unit, viewModel: HomeViewModel) {
-    val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
-    val context = LocalContext.current
+    //val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
+    //val context = LocalContext.current
 
     val welcomeText = stringResource(id = R.string.welcome)
     val introText = stringResource(id = R.string.home_intro)
     val recentText = stringResource(id = R.string.home_recent)
 
-    Log.d("LAST", lastFive.toString())
-    // Getting the artwork objects by id's collected in lastFive and sending info to recycler adapter
     val artworks = remember { mutableListOf<Artwork?>() }
-    //val test = viewModel.getArt(lastFive[0]).observeAsState().value
-    //Log.d("TEST", test.toString())
     for (i in lastFive.indices) {
         viewModel.getArt(lastFive[i]).observeAsState().value.let { artworks.add(it?.get(0)) }
     }
-    Log.d("ARTWORKS", artworks.toString())
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
