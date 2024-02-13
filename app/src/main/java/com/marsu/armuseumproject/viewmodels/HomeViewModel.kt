@@ -11,7 +11,7 @@ import com.marsu.armuseumproject.database.Artwork
  * Provides functionality for retrieving an Artwork from DB by it's id.
  * The id is used to show last 5 viewed artworks on HomeFragment.
  */
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel(application: Application) : ArSelectionViewModel(application) {
     private val database = ArtDB.get(application.applicationContext)
-    fun getArt(id: Int): LiveData<List<Artwork>> = database.artDao().getSpecificArt(id)
+    //fun getArt(id: Int): LiveData<List<Artwork>> = database.artDao().getSpecificArt(id)
 }

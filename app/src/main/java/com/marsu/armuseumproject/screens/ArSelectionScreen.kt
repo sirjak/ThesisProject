@@ -36,6 +36,7 @@ import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.activities.ArActivity
+import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.fragments.SHARED_KEY
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
@@ -65,7 +66,11 @@ class ArSelectionScreen : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ArSelectionScreen(lastFive, arSelectionViewModel)
+                    ArSelectionScreen(
+                        //preselectedArt = null,
+                        lastFive = lastFive,
+                        viewModel = arSelectionViewModel
+                    )
                 }
             }
         }
@@ -73,7 +78,11 @@ class ArSelectionScreen : ComponentActivity() {
 }
 
 @Composable
-fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewModel) {
+fun ArSelectionScreen(
+    //preselectedArt: Artwork?,
+    lastFive: MutableList<Int>,
+    viewModel: ArSelectionViewModel
+) {
     val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
     val context = LocalContext.current
 
@@ -86,9 +95,16 @@ fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewMode
     var chosenTitle by remember { mutableStateOf(noArtChosenText) }
     var isSelected by remember { mutableStateOf(false) }
 
-    if (chosenArt !== null) {
-        viewModel.imageUri.postValue(chosenArt)
-        viewModel.imageId.postValue(chosenId)
+    fun selectArt(art: Artwork) {
+        chosenArtist = art.artistDisplayName
+        chosenId = art.objectID
+        chosenTitle = art.title
+        isSelected = true
+    }
+
+    fun postValuesToViewModel(id: Int, uri: Uri) {
+        viewModel.imageUri.postValue(uri)
+        viewModel.imageId.postValue(id)
     }
 
     // Saving latest watched artwork id into MutableList<Int>
@@ -124,11 +140,9 @@ fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewMode
                 ArtItem(art = art, modifier = Modifier
                     .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                     .clickable {
-                        isSelected = true
                         chosenArt = art.primaryImage.toUri()
-                        chosenArtist = art.artistDisplayName
-                        chosenId = art.objectID
-                        chosenTitle = art.title
+                        postValuesToViewModel(art.objectID, art.primaryImage.toUri())
+                        selectArt(art)
                     }
                     .fillMaxWidth()
                 )

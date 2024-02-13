@@ -18,4 +18,6 @@ open class ArSelectionViewModel(application: Application) : AndroidViewModel(app
     val imageUri = MutableLiveData<Uri?>(null)
     val imageId = MutableLiveData<Int?>(null)
     var getAllArtwork: LiveData<List<Artwork>> = database.artDao().getAllArt()
+
+    fun getArt(id: Int): LiveData<List<Artwork>> = database.artDao().getSpecificArt(id)
 }

@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
@@ -37,21 +36,6 @@ class ArSelection : Fragment() {
     private lateinit var arSelectionViewModel: ArSelectionViewModel
     private var lastFive = mutableListOf<Int>() // initiate variable
 
-    private val args: ArSelectionArgs by navArgs()
-
-    // Handle possible navigation arguments if coming via the recent artworks list from Home Fragment
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val chosenArtwork = args.latestArtwork
-        /*if (chosenArtwork != null) {
-            binding.chosenTitle.text = chosenArtwork.title
-            binding.chosenArtist.text = chosenArtwork.artistDisplayName
-            arSelectionViewModel.imageUri.postValue(chosenArtwork.primaryImage.toUri())
-            arSelectionViewModel.imageId.postValue(chosenArtwork.objectID)
-        }*/
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,6 +50,8 @@ class ArSelection : Fragment() {
             lastFive = Gson().fromJson(json, type)
         }
 
+        //val preselectedId = preferences.getData(CHOSEN_KEY, null)?.toInt()
+        //val preselectedArt = preselectedId?.let { arSelectionViewModel.getArt(it).value }
         val binding = DataBindingUtil.inflate<FragmentArSelectionBinding>(
             inflater,
             R.layout.fragment_ar_selection,
@@ -80,10 +66,13 @@ class ArSelection : Fragment() {
                             color = MaterialTheme.colorScheme.background,
                             modifier = Modifier.fillMaxSize()
                         ) {
+
                             ArSelectionScreen(
+                                //preselectedArt = preselectedArt[0],
                                 lastFive = lastFive,
                                 viewModel = arSelectionViewModel
                             )
+
                         }
                     }
                 }
