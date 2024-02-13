@@ -81,8 +81,9 @@ fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewMode
 
     val noArtChosenText = stringResource(id = R.string.none)
     var chosenArt by remember { mutableStateOf<Uri?>(null) }
+    var chosenArtist by remember { mutableStateOf("") }
     var chosenId by remember { mutableStateOf<Int?>(null) }
-    var chosenText by remember { mutableStateOf(noArtChosenText) }
+    var chosenTitle by remember { mutableStateOf(noArtChosenText) }
     var isSelected by remember { mutableStateOf(false) }
 
     if (chosenArt !== null) {
@@ -125,8 +126,9 @@ fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewMode
                     .clickable {
                         isSelected = true
                         chosenArt = art.primaryImage.toUri()
+                        chosenArtist = art.artistDisplayName
                         chosenId = art.objectID
-                        chosenText = art.title
+                        chosenTitle = art.title
                     }
                     .fillMaxWidth()
                 )
@@ -140,7 +142,8 @@ fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewMode
         Text(
             text = stringResource(id = R.string.chosen_artwork)
         )
-        Text(text = chosenText)
+        Text(text = chosenTitle)
+        Text(text = chosenArtist)
         Button(
             enabled = isSelected,
             onClick = {
