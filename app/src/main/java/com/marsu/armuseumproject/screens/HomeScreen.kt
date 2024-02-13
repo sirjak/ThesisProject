@@ -1,6 +1,7 @@
 package com.marsu.armuseumproject.screens
 
 import android.app.Application
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -29,6 +30,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
+import com.marsu.armuseumproject.activities.ArActivity
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.fragments.SHARED_KEY
@@ -58,7 +60,7 @@ class HomeScreen : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    HomeScreen(lastFive, viewModel)
+                    //HomeScreen(lastFive, viewModel)
                 }
             }
         }
@@ -66,7 +68,7 @@ class HomeScreen : ComponentActivity() {
 }
 
 @Composable
-fun HomeScreen(lastFive: MutableList<Int>, viewModel: HomeViewModel) {
+fun HomeScreen(lastFive: MutableList<Int>, onNavigate: (Int) -> Unit, viewModel: HomeViewModel) {
     val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
     val context = LocalContext.current
 
@@ -104,7 +106,9 @@ fun HomeScreen(lastFive: MutableList<Int>, viewModel: HomeViewModel) {
                     ArtItem(art = art,
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp, top = 10.dp)
-                            .clickable { /*TODO */ }
+                            .clickable {
+                                onNavigate(R.id.navigation)
+                            }
                             .fillMaxWidth()
                     )
                 }
