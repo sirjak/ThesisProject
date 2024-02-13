@@ -1,6 +1,5 @@
 package com.marsu.armuseumproject.ui_components
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
