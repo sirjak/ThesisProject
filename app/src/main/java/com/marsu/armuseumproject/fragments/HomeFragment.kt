@@ -47,6 +47,7 @@ class HomeFragment : Fragment() {
             lastFive = Gson().fromJson(json, type)
         }
 
+        // TODO: Implement remembering which ArtItem was clicked in Home and preselect it at ArScreen
         val binding = DataBindingUtil.inflate<FragmentHomeBinding>(
             inflater,
             R.layout.fragment_home,
@@ -72,7 +73,7 @@ class HomeFragment : Fragment() {
         }
         return binding.root
     }
-
+    // TODO: Figure out if what this part does and if it should be kept
     /*override fun onDestroyView() {
         super.onDestroyView()
         binding = null
