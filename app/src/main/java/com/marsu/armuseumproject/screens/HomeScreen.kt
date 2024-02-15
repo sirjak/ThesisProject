@@ -1,8 +1,6 @@
 package com.marsu.armuseumproject.screens
 
-import android.app.Application
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -33,17 +31,16 @@ import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.fragments.SHARED_KEY
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.ui_components.ArtItem
-import com.marsu.armuseumproject.viewmodels.HomeViewModel
+import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
 import java.lang.reflect.Type
 
-const val CHOSEN_KEY = "CHOSEN_ART"
 class HomeScreen : ComponentActivity() {
-    private lateinit var viewModel: HomeViewModel
+    //private lateinit var viewModel: ArSelectionViewModel
     private var lastFive = mutableListOf<Int>() // initiate variable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = HomeViewModel(Application())
+        //viewModel = ArSelectionViewModel(Application())
 
         // Retrieve lastFive from shared preferences and converting back to list from json
         val preferences = PreferencesManager(MyApp.appContext)
@@ -66,10 +63,14 @@ class HomeScreen : ComponentActivity() {
 }
 
 @Composable
-fun HomeScreen(lastFive: MutableList<Int>, onNavigate: (Int) -> Unit, viewModel: HomeViewModel) {
-    val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
+fun HomeScreen(
+    lastFive: MutableList<Int>,
+    onNavigate: (Int) -> Unit,
+    viewModel: ArSelectionViewModel
+) {
+    //val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
     //val context = LocalContext.current
-    Log.d("LAST", lastFive.toString())
+
     val welcomeText = stringResource(id = R.string.welcome)
     val introText = stringResource(id = R.string.home_intro)
     val recentText = stringResource(id = R.string.home_recent)
@@ -101,8 +102,7 @@ fun HomeScreen(lastFive: MutableList<Int>, onNavigate: (Int) -> Unit, viewModel:
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                             .clickable {
-                                Log.d("HOME ID", art.objectID.toString())
-                                preferencesManager.saveData(CHOSEN_KEY, art.objectID.toString())
+                                viewModel.saveId(art.objectID)
                                 onNavigate(R.id.navigation)
                             }
                             .fillMaxWidth()

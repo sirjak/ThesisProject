@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -19,7 +20,7 @@ import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.databinding.FragmentHomeBinding
 import com.marsu.armuseumproject.screens.HomeScreen
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
-import com.marsu.armuseumproject.viewmodels.HomeViewModel
+import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
 import java.lang.reflect.Type
 
 /**
@@ -30,15 +31,13 @@ import java.lang.reflect.Type
  */
 class HomeFragment : Fragment() {
 
-    private lateinit var viewModel: HomeViewModel
     private var lastFive = mutableListOf<Int>() // initiate variable
+    private val viewModel: ArSelectionViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = HomeViewModel(requireActivity().application)
-
         // Retrieving the previously stored list of id's to use it as a base for lastFive
         val preferences = PreferencesManager(MyApp.appContext)
         val json = preferences.getData(SHARED_KEY, null)
@@ -47,7 +46,6 @@ class HomeFragment : Fragment() {
             lastFive = Gson().fromJson(json, type)
         }
 
-        // TODO: Implement remembering which ArtItem was clicked in Home and preselect it at ArScreen
         val binding = DataBindingUtil.inflate<FragmentHomeBinding>(
             inflater,
             R.layout.fragment_home,

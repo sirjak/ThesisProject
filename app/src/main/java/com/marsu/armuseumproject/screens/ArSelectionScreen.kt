@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -67,7 +68,6 @@ class ArSelectionScreen : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     ArSelectionScreen(
-                        //preselectedArt = null,
                         lastFive = lastFive,
                         viewModel = arSelectionViewModel
                     )
@@ -79,7 +79,6 @@ class ArSelectionScreen : ComponentActivity() {
 
 @Composable
 fun ArSelectionScreen(
-    //preselectedArt: Artwork?,
     lastFive: MutableList<Int>,
     viewModel: ArSelectionViewModel
 ) {
@@ -87,6 +86,7 @@ fun ArSelectionScreen(
     val context = LocalContext.current
 
     val artworks by viewModel.getAllArtwork.observeAsState()
+    val preselectId by viewModel.preselectedId.collectAsState()
 
     val noArtChosenText = stringResource(id = R.string.none)
     var chosenArt by remember { mutableStateOf<Uri?>(null) }
@@ -100,6 +100,13 @@ fun ArSelectionScreen(
         chosenId = art.objectID
         chosenTitle = art.title
         isSelected = true
+        viewModel.saveId(null)
+    }
+
+    // Handling preselection when navigated from HomeScreen by clicking an ArtItem
+    if (preselectId !== null) {
+        val art = viewModel.getArt(preselectId!!).observeAsState().value
+        art?.get(0)?.let { selectArt(it) }
     }
 
     fun postValuesToViewModel(id: Int, uri: Uri) {

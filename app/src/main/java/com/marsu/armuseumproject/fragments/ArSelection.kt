@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
@@ -33,15 +34,13 @@ const val SHARED_KEY = "LAST_FIVE"
 
 class ArSelection : Fragment() {
 
-    private lateinit var arSelectionViewModel: ArSelectionViewModel
     private var lastFive = mutableListOf<Int>() // initiate variable
+    private val viewModel: ArSelectionViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        arSelectionViewModel = ArSelectionViewModel(requireActivity().application)
-
         // Retrieving the previously stored list of id's to use it as a base for lastFive
         val preferences = PreferencesManager(MyApp.appContext)
         val json = preferences.getData(SHARED_KEY, null)
@@ -50,8 +49,6 @@ class ArSelection : Fragment() {
             lastFive = Gson().fromJson(json, type)
         }
 
-        //val preselectedId = preferences.getData(CHOSEN_KEY, null)?.toInt()
-        //val preselectedArt = preselectedId?.let { arSelectionViewModel.getArt(it).value }
         val binding = DataBindingUtil.inflate<FragmentArSelectionBinding>(
             inflater,
             R.layout.fragment_ar_selection,
@@ -66,13 +63,10 @@ class ArSelection : Fragment() {
                             color = MaterialTheme.colorScheme.background,
                             modifier = Modifier.fillMaxSize()
                         ) {
-
                             ArSelectionScreen(
-                                //preselectedArt = preselectedArt[0],
                                 lastFive = lastFive,
-                                viewModel = arSelectionViewModel
+                                viewModel = viewModel
                             )
-
                         }
                     }
                 }
