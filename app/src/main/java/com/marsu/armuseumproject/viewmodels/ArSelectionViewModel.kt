@@ -15,16 +15,16 @@ import kotlinx.coroutines.flow.StateFlow
  * in the RecyclerView
  */
 open class ArSelectionViewModel(
-    application: Application,
-    private val state: SavedStateHandle = SavedStateHandle()
-) :
-    AndroidViewModel(application) {
+    application: Application, private val state: SavedStateHandle = SavedStateHandle()
+) : AndroidViewModel(application) {
     private val database = ArtDB.get(application.applicationContext)
 
     // Utilities to preselection handling
-    val preselectedId: StateFlow<Int?> = state.getStateFlow(key = "BOOP", initialValue = null)
+    val preselectedId: StateFlow<Int?> =
+        state.getStateFlow(key = "PRESELECTION", initialValue = null)
+
     fun saveId(id: Int?) {
-        state.set(key = "BOOP", value = id)
+        state.set(key = "PRESELECTION", value = id)
     }
 
     val imageUri = MutableLiveData<Uri?>(null)

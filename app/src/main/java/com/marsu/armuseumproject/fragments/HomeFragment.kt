@@ -35,8 +35,7 @@ class HomeFragment : Fragment() {
     private val viewModel: ArSelectionViewModel by activityViewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         // Retrieving the previously stored list of id's to use it as a base for lastFive
         val preferences = PreferencesManager(MyApp.appContext)
@@ -47,10 +46,7 @@ class HomeFragment : Fragment() {
         }
 
         val binding = DataBindingUtil.inflate<FragmentHomeBinding>(
-            inflater,
-            R.layout.fragment_home,
-            container,
-            false
+            inflater, R.layout.fragment_home, container, false
         ).apply {
             composeView.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -58,11 +54,9 @@ class HomeFragment : Fragment() {
                     ARMuseumProjectTheme {
                         Surface(modifier = Modifier.fillMaxSize()) {
                             HomeScreen(
-                                lastFive = lastFive,
-                                onNavigate = { _ ->
+                                lastFive = lastFive, onNavigate = { _ ->
                                     findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToArSelection())
-                                },
-                                viewModel = viewModel
+                                }, viewModel = viewModel
                             )
                         }
                     }

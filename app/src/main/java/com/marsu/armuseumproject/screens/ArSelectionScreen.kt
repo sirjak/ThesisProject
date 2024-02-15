@@ -64,12 +64,10 @@ class ArSelectionScreen : ComponentActivity() {
             ARMuseumProjectTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     ArSelectionScreen(
-                        lastFive = lastFive,
-                        viewModel = arSelectionViewModel
+                        lastFive = lastFive, viewModel = arSelectionViewModel
                     )
                 }
             }
@@ -79,8 +77,7 @@ class ArSelectionScreen : ComponentActivity() {
 
 @Composable
 fun ArSelectionScreen(
-    lastFive: MutableList<Int>,
-    viewModel: ArSelectionViewModel
+    lastFive: MutableList<Int>, viewModel: ArSelectionViewModel
 ) {
     val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
     val context = LocalContext.current
@@ -139,26 +136,24 @@ fun ArSelectionScreen(
     }
 
     LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top
     ) {
         artworks?.let {
             itemsIndexed(it) { _, art ->
-                ArtItem(art = art, modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp, top = 10.dp)
-                    .clickable {
-                        chosenArt = art.primaryImage.toUri()
-                        postValuesToViewModel(art.objectID, art.primaryImage.toUri())
-                        selectArt(art)
-                    }
-                    .fillMaxWidth()
-                )
+                ArtItem(art = art,
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp, top = 10.dp)
+                        .clickable {
+                            chosenArt = art.primaryImage.toUri()
+                            postValuesToViewModel(art.objectID, art.primaryImage.toUri())
+                            selectArt(art)
+                        }
+                        .fillMaxWidth())
             }
         }
     }
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Bottom
     ) {
         Text(
             text = stringResource(id = R.string.chosen_artwork)
@@ -166,16 +161,14 @@ fun ArSelectionScreen(
         Text(text = chosenTitle)
         Text(text = chosenArtist)
         Button(
-            enabled = isSelected,
-            onClick = {
+            enabled = isSelected, onClick = {
                 val id = viewModel.imageId.value
                 if (id !== null) {
                     addToList(id)
                     addToSharedPrefs()
                 }
                 context.startActivity(Intent(context, ArActivity::class.java))
-            },
-            modifier = Modifier.padding(all = 20.dp)
+            }, modifier = Modifier.padding(all = 20.dp)
         ) {
             Text(text = stringResource(id = R.string.start_ar))
         }

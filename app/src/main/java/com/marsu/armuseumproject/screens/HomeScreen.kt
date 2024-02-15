@@ -64,9 +64,7 @@ class HomeScreen : ComponentActivity() {
 
 @Composable
 fun HomeScreen(
-    lastFive: MutableList<Int>,
-    onNavigate: (Int) -> Unit,
-    viewModel: ArSelectionViewModel
+    lastFive: MutableList<Int>, onNavigate: (Int) -> Unit, viewModel: ArSelectionViewModel
 ) {
     //val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
     //val context = LocalContext.current
@@ -81,8 +79,7 @@ fun HomeScreen(
     }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top
     ) {
         Text(
             modifier = Modifier.padding(all = 10.dp),
@@ -105,8 +102,7 @@ fun HomeScreen(
                                 viewModel.saveId(art.objectID)
                                 onNavigate(R.id.navigation)
                             }
-                            .fillMaxWidth()
-                    )
+                            .fillMaxWidth())
                 }
             }
         }
