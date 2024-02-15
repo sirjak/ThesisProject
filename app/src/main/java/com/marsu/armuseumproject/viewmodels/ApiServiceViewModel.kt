@@ -74,7 +74,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
                 service.getArtIDs(q = searchInput.value.toString())
             }
 
-            if (response.objectIDs.isEmpty()) {
+            if (response.objectIDs.isNullOrEmpty()) {
                 Log.d("getArtIDs", "No objectIDs found")
             } else {
                 Log.d("getArtIDs", "Found ${response.objectIDs.size} ids")
