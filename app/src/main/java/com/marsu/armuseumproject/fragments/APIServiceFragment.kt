@@ -1,20 +1,25 @@
 package com.marsu.armuseumproject.fragments
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.marsu.armuseumproject.activities.SelectDepartmentActivity
+import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.adapters.ApiServiceAdapter
 import com.marsu.armuseumproject.databinding.FragmentApiServiceBinding
+import com.marsu.armuseumproject.screens.ApiServiceScreen
+import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.viewmodels.ApiServiceViewModel
 
 /**
@@ -23,77 +28,98 @@ import com.marsu.armuseumproject.viewmodels.ApiServiceViewModel
  */
 class APIServiceFragment : Fragment() {
 
-    private lateinit var apiServiceViewModel: ApiServiceViewModel
-    private lateinit var binding: FragmentApiServiceBinding
+    private lateinit var viewmodel: ApiServiceViewModel
+
+    //private lateinit var binding: FragmentApiServiceBinding
     private lateinit var adapter: ApiServiceAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
     private var lastDepClick = 0L
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Init VM
-        apiServiceViewModel = ApiServiceViewModel(requireActivity())
+        apiServiceViewModel = ApiServiceViewModel(requireActivity().application)
         apiServiceViewModel.getArts(true)
-    }
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        viewmodel = ApiServiceViewModel(requireActivity().application)
+        val binding = DataBindingUtil.inflate<FragmentApiServiceBinding>(
+            inflater,
+            R.layout.fragment_api_service,
+            container,
+            false
+        ).apply {
+            composeView.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    ARMuseumProjectTheme {
+                        Surface(
+                            color = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            ApiServiceScreen(viewModel = viewmodel)
+                        }
+                    }
+                }
+            }
+        }
         // Initialize databinding
-        binding = FragmentApiServiceBinding.inflate(inflater)
+        /*binding = FragmentApiServiceBinding.inflate(inflater)
         binding.apiServiceViewModel = apiServiceViewModel
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = this*/
 
         // Recyclerview setup
-        adapter = ApiServiceAdapter()
+        /*adapter = ApiServiceAdapter()
         adapter.setHasStableIds(true)
         layoutManager = LinearLayoutManager(activity)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.setHasFixedSize(true)
-        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.layoutManager = layoutManager*/
 
         // Search button
-        binding.searchButton.setOnClickListener {
-            apiServiceViewModel.searchArtsWithInput()
-            closeKeyboard()
-        }
+        /* binding.searchButton.setOnClickListener {
+             apiServiceViewModel.searchArtsWithInput()
+             closeKeyboard()
+         }*/
 
         // Enter key
-        binding.apiSearchInput.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
+        /*binding.apiSearchInput.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                 apiServiceViewModel.searchArtsWithInput()
                 closeKeyboard()
                 return@OnKeyListener true
             }
             false
-        })
+        })*/
 
         // Department settings
-        binding.openDepartmentSettings.setOnClickListener {
+        /*binding.openDepartmentSettings.setOnClickListener {
             preventButtonClickSpam {
                 val intent = Intent(activity, SelectDepartmentActivity::class.java)
                 startActivity(intent)
             }
-        }
+        }*/
 
         // Clear button for department
-        binding.resetDepartment.setOnClickListener {
+        /*binding.resetDepartment.setOnClickListener {
             apiServiceViewModel.resetSelectedDepartment()
-        }
+        }*/
 
         // Recyclerview updates when fetching data from API
-        apiServiceViewModel.artsList.observe(viewLifecycleOwner) { arts ->
+        /*apiServiceViewModel.artsList.observe(viewLifecycleOwner) { arts ->
             arts.let {
                 adapter.setData(it)
             }
-        }
+        }*/
 
-        apiServiceViewModel.departmentId.observe(viewLifecycleOwner) {
+        /*apiServiceViewModel.departmentId.observe(viewLifecycleOwner) {
             it.let {
                 if (it == 0) {
                     binding.departmentIndicator.visibility = View.GONE
@@ -101,27 +127,27 @@ class APIServiceFragment : Fragment() {
                     binding.departmentIndicator.visibility = View.VISIBLE
                 }
             }
-        }
+        }*/
 
         // RecyclerView pagination
-        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (layoutManager.findLastCompletelyVisibleItemPosition() >=
-                    (apiServiceViewModel.artsList.value?.size?.minus(apiServiceViewModel.paginationAmount)
-                        ?: 0)
-                ) {
+        /* binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                 super.onScrolled(recyclerView, dx, dy)
+                 if (layoutManager.findLastCompletelyVisibleItemPosition() >=
+                     (apiServiceViewModel.artsList.value?.size?.minus(apiServiceViewModel.paginationAmount)
+                         ?: 0)
+                 ) {
 
-                    if ((apiServiceViewModel.loadingResults.value == false)) {
-                        apiServiceViewModel.getArts(false)
-                    }
-                }
+                     if ((apiServiceViewModel.loadingResults.value == false)) {
+                         apiServiceViewModel.getArts(false)
+                     }
+                 }
 
-            }
-        })
+             }
+         })*/
 
         // ProgressBar & recyclerview invisibility while loading
-        apiServiceViewModel.initialBatchLoaded.observe(viewLifecycleOwner) { status ->
+        /*apiServiceViewModel.initialBatchLoaded.observe(viewLifecycleOwner) { status ->
             status.let {
                 if (!it) {
                     binding.progressBar.visibility = View.VISIBLE
@@ -135,7 +161,7 @@ class APIServiceFragment : Fragment() {
                 apiServiceViewModel.updateResultText()
 
             }
-        }
+        }*/
 
         return binding.root
     }
@@ -147,7 +173,7 @@ class APIServiceFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        apiServiceViewModel.updateDepartmentID()
+        //apiServiceViewModel.updateDepartmentID()
     }
 
     private fun preventButtonClickSpam(f: () -> Unit) {

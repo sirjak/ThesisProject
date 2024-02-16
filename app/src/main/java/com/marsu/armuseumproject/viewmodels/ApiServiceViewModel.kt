@@ -13,6 +13,8 @@ import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.service.APIService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -57,6 +59,25 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
     val paginationAmount = 10
 
+    /**
+     * Testing stuff here
+     */
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching = _isSearching.asStateFlow()
+
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
+
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+    }
+
+    fun onToggleSearch() {
+        _isSearching.value = !_isSearching.value
+        if (!_isSearching.value) {
+            onSearchTextChange("")
+        }
+    }
 
     /**
      * Get Art ids and store them for later usage.
