@@ -2,6 +2,7 @@ package com.marsu.armuseumproject.screens
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -26,6 +28,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -89,10 +92,29 @@ fun ApiServiceScreen(
     val resultsText = stringResource(id = R.string.results)
 
     val artworks = remember { mutableListOf<Artwork?>() }
+    val boop by viewModel.artsList.observeAsState()
+    val test = remember { mutableListOf<Artwork?>() }
+
+    if (viewModel.initialBatchLoaded.observeAsState().value == true) {
+        val results = viewModel.artsList.value
+        Log.d("RESULTS", results.toString())
+        if (results != null) {
+            for (i in results.indices) {
+                test.add(results[i])
+            }
+        }
+    }
+    /*if (boop?.isNotEmpty() == true && boop !== null) {
+        for (i in boop?.indices!!) {
+            test.add(boop!![i])
+        }
+    }*/
+    //val test by viewModel.artsList.observeAsState()
+    Log.d("TEST", test.toString())
     /*for (i in lastFive.indices) {
         viewModel.getArt(lastFive[i]).observeAsState().value.let { artworks.add(it?.get(0)) }
-    }
-*/
+    }*/
+
     /**
      * Whole screen
      */
@@ -122,18 +144,29 @@ fun ApiServiceScreen(
                     unfocusedTextColor = MaterialTheme.colorScheme.primary
                 ),
                 leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_search_32),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
+                    IconButton(
+                        content = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_baseline_search_32),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        },
+                        onClick = viewModel::searchArtsWithInput
                     )
                 },
                 modifier = Modifier.padding(start = 10.dp, top = 10.dp),
-                placeholder = { Text(color = MaterialTheme.colorScheme.primary, text = stringResource(id = R.string.search_arts)) },
+                placeholder = {
+                    Text(
+                        color = MaterialTheme.colorScheme.primary,
+                        text = stringResource(id = R.string.search_arts)
+                    )
+                },
                 shape = MaterialTheme.shapes.extraLarge,
                 singleLine = true,
                 value = searchText,
-                onValueChange = viewModel::onSearchTextChange)
+                onValueChange = viewModel::onSearchTextChange
+            )
 
             TextButton(modifier = Modifier.padding(end = 10.dp), onClick = { /*TODO*/ }) {
                 Icon(
@@ -156,7 +189,7 @@ fun ApiServiceScreen(
         )
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            itemsIndexed(artworks) { _, art ->
+            itemsIndexed(test) { _, art ->
                 if (art != null) {
                     ArtItem(art = art,
                         modifier = Modifier

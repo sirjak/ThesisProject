@@ -25,7 +25,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
     private val initialBatchSize = 15
     private val service = APIService.service
-    val searchInput = MutableLiveData("")
+    //val searchInput = MutableLiveData("")
 
     private val _departmentText = MutableLiveData("")
     val departmentText: LiveData<String>
@@ -84,15 +84,15 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      */
     private suspend fun getArtIDs(): MutableList<Int> {
 
-        return if (searchInput.value?.isNotEmpty() == true) {
+        return if (searchText.value.isNotEmpty()) {
 
             val response = if (departmentId.value != 0) {
                 service.getArtIDs(
-                    q = searchInput.value.toString(),
+                    q = searchText.value.toString(),
                     departmentId = departmentId.value ?: 0
                 )
             } else {
-                service.getArtIDs(q = searchInput.value.toString())
+                service.getArtIDs(q = searchText.value.toString())
             }
 
             if (response.objectIDs.isNullOrEmpty()) {
@@ -169,9 +169,23 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      * Searches the API if the searchInput value is valid. searchInput must have at least a length of 2.
      */
     fun searchArtsWithInput() {
-        if (searchInput.value?.isEmpty() == true) {
+        Log.d("VIEWMODEL", searchText.value)
+        /*if (searchInput.value?.isEmpty() == true) {
             return
         } else if (searchInput.value != null && searchInput.value?.length!! < 2) {
+            Toast.makeText(
+                MyApp.appContext,
+                "${MyApp.appContext.getString(R.string.search_too_short)}.",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        _artsList.value = mutableListOf()
+        getArts(true)*/
+        if (searchText.value.isEmpty() == true) {
+            Log.i("SEARCH", "Empty searchText")
+            return
+        } else if (searchText.value.length < 2) {
             Toast.makeText(
                 MyApp.appContext,
                 "${MyApp.appContext.getString(R.string.search_too_short)}.",
