@@ -22,7 +22,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -94,44 +93,33 @@ fun ApiServiceScreen(
         viewModel.getArt(lastFive[i]).observeAsState().value.let { artworks.add(it?.get(0)) }
     }
 */
+    /**
+     * Whole screen
+     */
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
+        /**
+         * Search area
+         */
         Row(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.onPrimary)
-                .padding(bottom = 50.dp)
+                .padding(bottom = 10.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            /*SearchBar(
-                active = isSearching,
-                query = searchText,
-                onQueryChange = viewModel::onSearchTextChange,
-                onActiveChange = { viewModel.onToggleSearch() },
-                onSearch = viewModel::onSearchTextChange,
-                placeholder = { Text(text = viewModel.searchInput.value.toString()) },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_search_32),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                modifier = Modifier
-                    .padding(all = 10.dp)
-            ) {
-
-            }*/
             OutlinedTextField(
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.background,
                     focusedIndicatorColor = MaterialTheme.colorScheme.background,
+                    focusedTextColor = MaterialTheme.colorScheme.primary,
                     unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.background
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                    unfocusedTextColor = MaterialTheme.colorScheme.primary
                 ),
                 leadingIcon = {
                     Icon(
@@ -141,17 +129,12 @@ fun ApiServiceScreen(
                     )
                 },
                 modifier = Modifier.padding(start = 10.dp, top = 10.dp),
+                placeholder = { Text(color = MaterialTheme.colorScheme.primary, text = stringResource(id = R.string.search_arts)) },
                 shape = MaterialTheme.shapes.extraLarge,
                 singleLine = true,
-                value = "Joku",
-                onValueChange = { /*TODO */ })
-            /*Button(content = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_filter_alt_24),
-                    contentDescription = null
-                )
-                Text(text = "Filter")
-            }, onClick = { *//*TODO*//* })*/
+                value = searchText,
+                onValueChange = viewModel::onSearchTextChange)
+
             TextButton(modifier = Modifier.padding(end = 10.dp), onClick = { /*TODO*/ }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_filter_alt_24),
@@ -161,6 +144,9 @@ fun ApiServiceScreen(
             }
         }
 
+        /**
+         * Result area
+         */
         Divider(modifier = Modifier.shadow(1.dp))
 
         Text(
