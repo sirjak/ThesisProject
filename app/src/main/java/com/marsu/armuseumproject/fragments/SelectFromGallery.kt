@@ -78,7 +78,7 @@ class SelectFromGallery : Fragment() {
     }
 }
 
-// TODO: FocusManager
+// TODO: FocusManager and ImeAction. Add keyboardOptions and keyboardActions
 @Composable
 fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
 
