@@ -78,6 +78,7 @@ class SelectFromGallery : Fragment() {
     }
 }
 
+// TODO: FocusManager
 @Composable
 fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
 
