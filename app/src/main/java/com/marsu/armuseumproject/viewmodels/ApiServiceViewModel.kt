@@ -171,20 +171,8 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      * Searches the API if the searchInput value is valid. searchInput must have at least a length of 2.
      */
     fun searchArtsWithInput() {
-        Log.d("VIEWMODEL", searchText.value)
-        /*if (searchInput.value?.isEmpty() == true) {
-            return
-        } else if (searchInput.value != null && searchInput.value?.length!! < 2) {
-            Toast.makeText(
-                MyApp.appContext,
-                "${MyApp.appContext.getString(R.string.search_too_short)}.",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
-        _artsList.value = mutableListOf()
-        getArts(true)*/
-        if (searchText.value.isEmpty() == true) {
+        Log.d("searchText", searchText.value)
+        if (searchText.value.isEmpty()) {
             Log.i("SEARCH", "Empty searchText")
             return
         } else if (searchText.value.length < 2) {
@@ -222,10 +210,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
         val r = resultAmount.value
 
-        if (initialBatchLoaded.value != true) {
-            _resultText.value = context.getString(R.string.searching)
-            return
-        } else if (r == 1) {
+        if (r == 1) {
             _resultText.value = "$r ${context.getString(R.string.result)}"
         } else if (r != null) {
             if (r > 1) {

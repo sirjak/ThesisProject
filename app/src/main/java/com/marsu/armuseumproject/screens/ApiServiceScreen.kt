@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -81,12 +80,21 @@ class ApiServiceScreen : ComponentActivity() {
 
 // TODO: Dismiss keyboard when search button clicked
 // TODO: Dismiss keyboard when enter is clicked
+// TODO: Endless scroll / pagination
 @Composable
 fun ApiServiceScreen(
     viewModel: ApiServiceViewModel
 ) {
     //val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
     //val context = LocalContext.current
+    /*val state = rememberLazyListState()
+
+    val reachedBottom: Boolean by remember {
+        derivedStateOf {
+            val lastVisibleItem = state.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem?.index != 0 && lastVisibleItem?.index == state.layoutInfo.totalItemsCount - 1
+        }
+    }*/
 
     val searchText by viewModel.searchText.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
@@ -196,7 +204,7 @@ fun ApiServiceScreen(
             }
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                itemsIndexed(test) { _, art ->
+                itemsIndexed(test) { index, art ->
                     if (art != null) {
                         ArtItem(art = art,
                             modifier = Modifier
@@ -205,6 +213,13 @@ fun ApiServiceScreen(
                                     /* TODO */
                                 }
                                 .fillMaxWidth())
+                        Log.d("INDEX", index.toString())
+                        Log.d("test size", test.size.toString())
+
+                        if (index >= test.size - 3) {
+                            // TODO: Figure out how to load more shit
+                            Log.d("TAG", "In position to load more items to the list")
+                        }
                     }
                 }
             }
