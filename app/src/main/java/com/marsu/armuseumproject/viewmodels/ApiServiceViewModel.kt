@@ -45,7 +45,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
     val artsList: LiveData<List<Artwork>>
         get() = _artsList
 
-    private val _loadingResults = MutableLiveData(true)
+    private val _loadingResults = MutableLiveData(false)
     val loadingResults: LiveData<Boolean>
         get() = _loadingResults
 
