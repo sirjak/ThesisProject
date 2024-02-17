@@ -79,7 +79,8 @@ class ApiServiceScreen : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+// TODO: Dismiss keyboard when search button clicked
+// TODO: Dismiss keyboard when enter is clicked
 @Composable
 fun ApiServiceScreen(
     viewModel: ApiServiceViewModel
@@ -90,13 +91,12 @@ fun ApiServiceScreen(
     val searchText by viewModel.searchText.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
     val isLoading by viewModel.loadingResults.observeAsState()
-
+    val resultsText by viewModel.resultText.observeAsState()
     val noResultText = stringResource(id = R.string.no_result)
-    val resultsText = stringResource(id = R.string.results)
 
     val artworks = remember { mutableListOf<Artwork?>() }
     val test = remember { mutableListOf<Artwork?>() }
-    Log.d("TEST", test.toString())
+    Log.d("resultsText", resultsText.toString())
 
     if (viewModel.initialBatchLoaded.observeAsState().value == true) {
         val results = viewModel.artsList.value
@@ -186,11 +186,14 @@ fun ApiServiceScreen(
                 trackColor = MaterialTheme.colorScheme.onPrimary
             )
         } else {
-            Text(
-                modifier = Modifier.padding(all = 10.dp),
-                text = if (artworks.isEmpty()) noResultText else resultsText,
-                textAlign = TextAlign.Center
-            )
+            (if (resultsText !== null) resultsText else noResultText)?.let {
+                Text(
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(all = 10.dp),
+                    text = it,
+                    textAlign = TextAlign.Center
+                )
+            }
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 itemsIndexed(test) { _, art ->

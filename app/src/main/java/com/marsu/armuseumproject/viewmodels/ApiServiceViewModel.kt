@@ -161,6 +161,8 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
             _loadingResults.value = false
             _initialBatchLoaded.value = true
+
+            updateResultText()
         }
     }
 
