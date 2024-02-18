@@ -80,21 +80,13 @@ class ApiServiceScreen : ComponentActivity() {
 
 // TODO: Dismiss keyboard when search button clicked
 // TODO: Dismiss keyboard when enter is clicked
-// TODO: Endless scroll / pagination
+// TODO: Show progress indicator for the whole initial batch loading time
 @Composable
 fun ApiServiceScreen(
     viewModel: ApiServiceViewModel
 ) {
     //val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
     //val context = LocalContext.current
-    /*val state = rememberLazyListState()
-
-    val reachedBottom: Boolean by remember {
-        derivedStateOf {
-            val lastVisibleItem = state.layoutInfo.visibleItemsInfo.lastOrNull()
-            lastVisibleItem?.index != 0 && lastVisibleItem?.index == state.layoutInfo.totalItemsCount - 1
-        }
-    }*/
 
     val searchText by viewModel.searchText.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
@@ -102,19 +94,8 @@ fun ApiServiceScreen(
     val resultsText by viewModel.resultText.observeAsState()
     val noResultText = stringResource(id = R.string.no_result)
 
-    val artworks = remember { mutableListOf<Artwork?>() }
-    val test = remember { mutableListOf<Artwork?>() }
-    Log.d("resultsText", resultsText.toString())
-
-    if (viewModel.initialBatchLoaded.observeAsState().value == true) {
-        val results = viewModel.artsList.value
-        Log.d("RESULTS", results.toString())
-        if (results != null) {
-            for (i in results.indices) {
-                test.add(results[i])
-            }
-        }
-    }
+    //val artworks = remember { mutableListOf<Artwork?>() }
+    val test by viewModel.artsList.observeAsState()
 
     /**
      * Whole screen
@@ -183,8 +164,7 @@ fun ApiServiceScreen(
          */
         HorizontalDivider(modifier = Modifier.shadow(1.dp))
 
-        if (isLoading == true) {
-            Log.d("isLoading", isLoading.toString())
+        if (isLoading == true && test.isNullOrEmpty()) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(all = 20.dp)
@@ -204,8 +184,8 @@ fun ApiServiceScreen(
             }
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                itemsIndexed(test) { index, art ->
-                    if (art != null) {
+                if (!test.isNullOrEmpty()) {
+                    itemsIndexed(test!!) { index, art ->
                         ArtItem(art = art,
                             modifier = Modifier
                                 .padding(start = 10.dp, end = 10.dp, top = 10.dp)
@@ -214,11 +194,12 @@ fun ApiServiceScreen(
                                 }
                                 .fillMaxWidth())
                         Log.d("INDEX", index.toString())
-                        Log.d("test size", test.size.toString())
+                        Log.d("test size", test!!.size.toString())
 
-                        if (index >= test.size - 3) {
-                            // TODO: Figure out how to load more shit
-                            Log.d("TAG", "In position to load more items to the list")
+                        if (index >= test!!.size - 3) {
+                            if ((viewModel.loadingResults.value == false)) {
+                                viewModel.getArts(false)
+                            }
                         }
                     }
                 }
