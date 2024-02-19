@@ -88,8 +88,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
             val response = if (departmentId.value != 0) {
                 service.getArtIDs(
-                    q = searchText.value.toString(),
-                    departmentId = departmentId.value ?: 0
+                    q = searchText.value.toString(), departmentId = departmentId.value ?: 0
                 )
             } else {
                 service.getArtIDs(q = searchText.value.toString())
@@ -272,7 +271,6 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      * @return true if contains both primaryImage and primaryImageSmall.
      */
     private fun isValidArt(art: Artwork): Boolean {
-        return art.primaryImage.isNotEmpty() &&
-                art.primaryImageSmall.isNotEmpty()
+        return art.primaryImage.isNotEmpty() && art.primaryImageSmall.isNotEmpty()
     }
 }

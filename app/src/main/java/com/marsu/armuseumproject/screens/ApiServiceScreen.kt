@@ -84,18 +84,14 @@ class ApiServiceScreen : ComponentActivity() {
 fun ApiServiceScreen(
     viewModel: ApiServiceViewModel
 ) {
-    //val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
-    //val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
     val searchText by viewModel.searchText.collectAsState()
-    val isSearching by viewModel.isSearching.collectAsState()
     val isLoading by viewModel.loadingResults.observeAsState()
     val resultsText by viewModel.resultText.observeAsState()
     val noResultText = stringResource(id = R.string.no_result)
 
-    //val artworks = remember { mutableListOf<Artwork?>() }
-    val test by viewModel.artsList.observeAsState()
+    val artworks by viewModel.artsList.observeAsState()
     val initialBatch by viewModel.initialBatchLoaded.observeAsState()
 
     // Starts search, dismisses the keyboard and clears focus from the TextField
@@ -107,13 +103,11 @@ fun ApiServiceScreen(
     /**
      * Whole screen
      */
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Column(horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
         modifier = Modifier.pointerInput(Unit) {
             detectTapGestures(onTap = { focusManager.clearFocus() })
-        }
-    ) {
+        }) {
         /**
          * Search area
          */
@@ -126,33 +120,27 @@ fun ApiServiceScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            OutlinedTextField(
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.background,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.background,
-                    focusedTextColor = MaterialTheme.colorScheme.primary,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
-                    unfocusedTextColor = MaterialTheme.colorScheme.primary
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        launchSearch()
-                    }
-                ),
+            OutlinedTextField(colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.background,
+                focusedIndicatorColor = MaterialTheme.colorScheme.background,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary
+            ),
+                keyboardActions = KeyboardActions(onDone = {
+                    launchSearch()
+                }),
                 leadingIcon = {
-                    IconButton(
-                        content = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_baseline_search_32),
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        },
-                        onClick = {
-                            launchSearch()
-                        }
-                    )
+                    IconButton(content = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_baseline_search_32),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }, onClick = {
+                        launchSearch()
+                    })
                 },
                 modifier = Modifier
                     .padding(start = 10.dp, top = 10.dp)
@@ -208,8 +196,8 @@ fun ApiServiceScreen(
             }
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                if (!test.isNullOrEmpty()) {
-                    itemsIndexed(test!!) { index, art ->
+                if (!artworks.isNullOrEmpty()) {
+                    itemsIndexed(artworks!!) { index, art ->
                         ArtItem(art = art,
                             modifier = Modifier
                                 .padding(start = 10.dp, end = 10.dp, top = 10.dp)
@@ -219,7 +207,7 @@ fun ApiServiceScreen(
                                 .fillMaxWidth())
 
                         // Loading more items when getting closer to the bottom
-                        if (index >= test!!.size - 3) {
+                        if (index >= artworks!!.size - 3) {
                             if ((viewModel.loadingResults.value == false)) {
                                 viewModel.getArts(false)
                             }
