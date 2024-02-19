@@ -80,7 +80,6 @@ class ApiServiceScreen : ComponentActivity() {
 
 // TODO: Dismiss keyboard when search button clicked
 // TODO: Dismiss keyboard when enter is clicked
-// TODO: Show progress indicator for the whole initial batch loading time
 @Composable
 fun ApiServiceScreen(
     viewModel: ApiServiceViewModel
@@ -96,6 +95,7 @@ fun ApiServiceScreen(
 
     //val artworks = remember { mutableListOf<Artwork?>() }
     val test by viewModel.artsList.observeAsState()
+    val initialBatch by viewModel.initialBatchLoaded.observeAsState()
 
     /**
      * Whole screen
@@ -164,7 +164,7 @@ fun ApiServiceScreen(
          */
         HorizontalDivider(modifier = Modifier.shadow(1.dp))
 
-        if (isLoading == true && test.isNullOrEmpty()) {
+        if (isLoading == true && initialBatch == false) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(all = 20.dp)
@@ -174,7 +174,7 @@ fun ApiServiceScreen(
                 trackColor = MaterialTheme.colorScheme.onPrimary
             )
         } else {
-            (if (resultsText !== null) resultsText else noResultText)?.let {
+            (if (resultsText !== "") resultsText else noResultText)?.let {
                 Text(
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(all = 10.dp),
@@ -193,9 +193,8 @@ fun ApiServiceScreen(
                                     /* TODO */
                                 }
                                 .fillMaxWidth())
-                        Log.d("INDEX", index.toString())
-                        Log.d("test size", test!!.size.toString())
 
+                        // Loading more items when getting closer to the bottom
                         if (index >= test!!.size - 3) {
                             if ((viewModel.loadingResults.value == false)) {
                                 viewModel.getArts(false)
