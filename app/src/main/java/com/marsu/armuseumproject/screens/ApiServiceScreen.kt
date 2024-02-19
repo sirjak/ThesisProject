@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -33,8 +34,8 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -79,9 +80,6 @@ class ApiServiceScreen : ComponentActivity() {
     }
 }
 
-// TODO: Trigger search also with enter
-// TODO: Dismiss keyboard when enter is clicked
-// TODO: Dismiss keyboard when clicked outside of TextField
 @Composable
 fun ApiServiceScreen(
     viewModel: ApiServiceViewModel
@@ -99,6 +97,12 @@ fun ApiServiceScreen(
     //val artworks = remember { mutableListOf<Artwork?>() }
     val test by viewModel.artsList.observeAsState()
     val initialBatch by viewModel.initialBatchLoaded.observeAsState()
+
+    // Starts search, dismisses the keyboard and clears focus from the TextField
+    fun launchSearch() {
+        viewModel.searchArtsWithInput()
+        focusManager.clearFocus()
+    }
 
     /**
      * Whole screen
@@ -131,6 +135,11 @@ fun ApiServiceScreen(
                     unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
                     unfocusedTextColor = MaterialTheme.colorScheme.primary
                 ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        launchSearch()
+                    }
+                ),
                 leadingIcon = {
                     IconButton(
                         content = {
@@ -141,12 +150,18 @@ fun ApiServiceScreen(
                             )
                         },
                         onClick = {
-                            viewModel.searchArtsWithInput()
-                            focusManager.clearFocus()
+                            launchSearch()
                         }
                     )
                 },
-                modifier = Modifier.padding(start = 10.dp, top = 10.dp),
+                modifier = Modifier
+                    .padding(start = 10.dp, top = 10.dp)
+                    .onKeyEvent {
+                        if (it.nativeKeyEvent.keyCode == android.view.KeyEvent.KEYCODE_ENTER) {
+                            launchSearch()
+                        }
+                        false
+                    },
                 placeholder = {
                     Text(
                         color = MaterialTheme.colorScheme.primary,
