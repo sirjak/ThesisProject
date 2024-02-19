@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +37,7 @@ import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.activities.ArActivity
+import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.fragments.SHARED_KEY
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
@@ -62,10 +64,11 @@ class ArSelectionScreen : ComponentActivity() {
             ARMuseumProjectTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    ArSelectionScreen(lastFive, arSelectionViewModel)
+                    ArSelectionScreen(
+                        lastFive = lastFive, viewModel = arSelectionViewModel
+                    )
                 }
             }
         }
@@ -73,11 +76,14 @@ class ArSelectionScreen : ComponentActivity() {
 }
 
 @Composable
-fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewModel) {
+fun ArSelectionScreen(
+    lastFive: MutableList<Int>, viewModel: ArSelectionViewModel
+) {
     val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
     val context = LocalContext.current
 
     val artworks by viewModel.getAllArtwork.observeAsState()
+    val preselectId by viewModel.preselectedId.collectAsState()
 
     val noArtChosenText = stringResource(id = R.string.none)
     var chosenArt by remember { mutableStateOf<Uri?>(null) }
@@ -86,9 +92,23 @@ fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewMode
     var chosenTitle by remember { mutableStateOf(noArtChosenText) }
     var isSelected by remember { mutableStateOf(false) }
 
-    if (chosenArt !== null) {
-        viewModel.imageUri.postValue(chosenArt)
-        viewModel.imageId.postValue(chosenId)
+    fun selectArt(art: Artwork) {
+        chosenArtist = art.artistDisplayName
+        chosenId = art.objectID
+        chosenTitle = art.title
+        isSelected = true
+        viewModel.saveId(null)
+    }
+
+    // Handling preselection when navigated from HomeScreen by clicking an ArtItem
+    if (preselectId !== null) {
+        val art = viewModel.getArt(preselectId!!).observeAsState().value
+        art?.get(0)?.let { selectArt(it) }
+    }
+
+    fun postValuesToViewModel(id: Int, uri: Uri) {
+        viewModel.imageUri.postValue(uri)
+        viewModel.imageId.postValue(id)
     }
 
     // Saving latest watched artwork id into MutableList<Int>
@@ -116,28 +136,24 @@ fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewMode
     }
 
     LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top
     ) {
         artworks?.let {
-            itemsIndexed(it) { index, art ->
-                ArtItem(art = art, modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp, top = 10.dp)
-                    .clickable {
-                        isSelected = true
-                        chosenArt = art.primaryImage.toUri()
-                        chosenArtist = art.artistDisplayName
-                        chosenId = art.objectID
-                        chosenTitle = art.title
-                    }
-                    .fillMaxWidth()
-                )
+            itemsIndexed(it) { _, art ->
+                ArtItem(art = art,
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp, top = 10.dp)
+                        .clickable {
+                            chosenArt = art.primaryImage.toUri()
+                            postValuesToViewModel(art.objectID, art.primaryImage.toUri())
+                            selectArt(art)
+                        }
+                        .fillMaxWidth())
             }
         }
     }
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Bottom
     ) {
         Text(
             text = stringResource(id = R.string.chosen_artwork)
@@ -145,16 +161,14 @@ fun ArSelectionScreen(lastFive: MutableList<Int>, viewModel: ArSelectionViewMode
         Text(text = chosenTitle)
         Text(text = chosenArtist)
         Button(
-            enabled = isSelected,
-            onClick = {
+            enabled = isSelected, onClick = {
                 val id = viewModel.imageId.value
                 if (id !== null) {
                     addToList(id)
                     addToSharedPrefs()
                 }
                 context.startActivity(Intent(context, ArActivity::class.java))
-            },
-            modifier = Modifier.padding(all = 20.dp)
+            }, modifier = Modifier.padding(all = 20.dp)
         ) {
             Text(text = stringResource(id = R.string.start_ar))
         }

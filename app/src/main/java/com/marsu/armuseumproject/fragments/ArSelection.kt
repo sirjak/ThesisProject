@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.navArgs
+import androidx.fragment.app.activityViewModels
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
@@ -34,30 +34,12 @@ const val SHARED_KEY = "LAST_FIVE"
 
 class ArSelection : Fragment() {
 
-    private lateinit var arSelectionViewModel: ArSelectionViewModel
     private var lastFive = mutableListOf<Int>() // initiate variable
-
-    private val args: ArSelectionArgs by navArgs()
-
-    // Handle possible navigation arguments if coming via the recent artworks list from Home Fragment
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val chosenArtwork = args.latestArtwork
-        /*if (chosenArtwork != null) {
-            binding.chosenTitle.text = chosenArtwork.title
-            binding.chosenArtist.text = chosenArtwork.artistDisplayName
-            arSelectionViewModel.imageUri.postValue(chosenArtwork.primaryImage.toUri())
-            arSelectionViewModel.imageId.postValue(chosenArtwork.objectID)
-        }*/
-    }
+    private val viewModel: ArSelectionViewModel by activityViewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        arSelectionViewModel = ArSelectionViewModel(requireActivity().application)
-
         // Retrieving the previously stored list of id's to use it as a base for lastFive
         val preferences = PreferencesManager(MyApp.appContext)
         val json = preferences.getData(SHARED_KEY, null)
@@ -67,10 +49,7 @@ class ArSelection : Fragment() {
         }
 
         val binding = DataBindingUtil.inflate<FragmentArSelectionBinding>(
-            inflater,
-            R.layout.fragment_ar_selection,
-            container,
-            false
+            inflater, R.layout.fragment_ar_selection, container, false
         ).apply {
             composeView.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -81,8 +60,7 @@ class ArSelection : Fragment() {
                             modifier = Modifier.fillMaxSize()
                         ) {
                             ArSelectionScreen(
-                                lastFive = lastFive,
-                                viewModel = arSelectionViewModel
+                                lastFive = lastFive, viewModel = viewModel
                             )
                         }
                     }

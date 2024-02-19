@@ -13,6 +13,8 @@ import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.service.APIService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -23,7 +25,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
     private val initialBatchSize = 15
     private val service = APIService.service
-    val searchInput = MutableLiveData("")
+    //val searchInput = MutableLiveData("")
 
     private val _departmentText = MutableLiveData("")
     val departmentText: LiveData<String>
@@ -43,7 +45,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
     val artsList: LiveData<List<Artwork>>
         get() = _artsList
 
-    private val _loadingResults = MutableLiveData(true)
+    private val _loadingResults = MutableLiveData(false)
     val loadingResults: LiveData<Boolean>
         get() = _loadingResults
 
@@ -57,24 +59,42 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
     val paginationAmount = 10
 
+    /**
+     * Testing stuff here
+     */
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching = _isSearching.asStateFlow()
+
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
+
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+    }
+
+    fun onToggleSearch() {
+        _isSearching.value = !_isSearching.value
+        if (!_isSearching.value) {
+            onSearchTextChange("")
+        }
+    }
 
     /**
      * Get Art ids and store them for later usage.
      */
     private suspend fun getArtIDs(): MutableList<Int> {
 
-        return if (searchInput.value?.isNotEmpty() == true) {
+        return if (searchText.value.isNotEmpty()) {
 
             val response = if (departmentId.value != 0) {
                 service.getArtIDs(
-                    q = searchInput.value.toString(),
-                    departmentId = departmentId.value ?: 0
+                    q = searchText.value.toString(), departmentId = departmentId.value ?: 0
                 )
             } else {
-                service.getArtIDs(q = searchInput.value.toString())
+                service.getArtIDs(q = searchText.value.toString())
             }
 
-            if (response.objectIDs.isEmpty()) {
+            if (response.objectIDs.isNullOrEmpty()) {
                 Log.d("getArtIDs", "No objectIDs found")
             } else {
                 Log.d("getArtIDs", "Found ${response.objectIDs.size} ids")
@@ -140,6 +160,8 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
             _loadingResults.value = false
             _initialBatchLoaded.value = true
+
+            updateResultText()
         }
     }
 
@@ -148,9 +170,11 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      * Searches the API if the searchInput value is valid. searchInput must have at least a length of 2.
      */
     fun searchArtsWithInput() {
-        if (searchInput.value?.isEmpty() == true) {
+        Log.d("searchText", searchText.value)
+        if (searchText.value.isEmpty()) {
+            Log.i("SEARCH", "Empty searchText")
             return
-        } else if (searchInput.value != null && searchInput.value?.length!! < 2) {
+        } else if (searchText.value.length < 2) {
             Toast.makeText(
                 MyApp.appContext,
                 "${MyApp.appContext.getString(R.string.search_too_short)}.",
@@ -185,10 +209,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
         val r = resultAmount.value
 
-        if (initialBatchLoaded.value != true) {
-            _resultText.value = context.getString(R.string.searching)
-            return
-        } else if (r == 1) {
+        if (r == 1) {
             _resultText.value = "$r ${context.getString(R.string.result)}"
         } else if (r != null) {
             if (r > 1) {
@@ -250,7 +271,6 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      * @return true if contains both primaryImage and primaryImageSmall.
      */
     private fun isValidArt(art: Artwork): Boolean {
-        return art.primaryImage.isNotEmpty() &&
-                art.primaryImageSmall.isNotEmpty()
+        return art.primaryImage.isNotEmpty() && art.primaryImageSmall.isNotEmpty()
     }
 }
