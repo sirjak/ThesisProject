@@ -78,7 +78,10 @@ class SelectFromGallery : Fragment() {
     }
 }
 
-// TODO: FocusManager and ImeAction. Add keyboardOptions and keyboardActions
+// TODO: Dismiss keyboard when save button clicked, use FocusManager
+// TODO: Dismiss keyboard when clicking outside of text field
+// TODO: Check ImeActions, keyboardOptions and keyboardActions
+// TODO: Check if it's possible to move to next text field with tab
 @Composable
 fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
 
