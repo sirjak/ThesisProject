@@ -1,5 +1,6 @@
 package com.marsu.armuseumproject.screens
 
+import ArtPopup
 import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -31,6 +32,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -45,6 +49,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
+import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.fragments.SHARED_KEY
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
@@ -93,6 +98,10 @@ fun ApiServiceScreen(
 
     val artworks by viewModel.artsList.observeAsState()
     val initialBatch by viewModel.initialBatchLoaded.observeAsState()
+
+    val showInfo by viewModel.isTesting.collectAsState()
+    var boobs by remember { mutableStateOf<Artwork?>(null) }
+    //val showInfo by remember { mutableStateOf(true) }
 
     // Starts search, dismisses the keyboard and clears focus from the TextField
     fun launchSearch() {
@@ -202,7 +211,8 @@ fun ApiServiceScreen(
                             modifier = Modifier
                                 .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                                 .clickable {
-                                    /* TODO */
+                                    boobs = art
+                                    viewModel.onArtItemClick()
                                 }
                                 .fillMaxWidth())
 
@@ -215,6 +225,9 @@ fun ApiServiceScreen(
                     }
                 }
             }
+        }
+        if (showInfo && boobs !== null) {
+            ArtPopup(boobs!!) { viewModel.onDismissPopup() }
         }
     }
 }

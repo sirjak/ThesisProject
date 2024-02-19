@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,7 +27,6 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
     private val initialBatchSize = 15
     private val service = APIService.service
-    //val searchInput = MutableLiveData("")
 
     private val _departmentText = MutableLiveData("")
     val departmentText: LiveData<String>
@@ -62,21 +63,21 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
     /**
      * Testing stuff here
      */
-    private val _isSearching = MutableStateFlow(false)
-    val isSearching = _isSearching.asStateFlow()
+    private var _isTesting = MutableStateFlow(false)
+    var isTesting = _isTesting.asStateFlow()
+
+    fun onArtItemClick() {
+        _isTesting.value = true
+    }
+    fun onDismissPopup() {
+        _isTesting.value = false
+    }
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
     fun onSearchTextChange(text: String) {
         _searchText.value = text
-    }
-
-    fun onToggleSearch() {
-        _isSearching.value = !_isSearching.value
-        if (!_isSearching.value) {
-            onSearchTextChange("")
-        }
     }
 
     /**
