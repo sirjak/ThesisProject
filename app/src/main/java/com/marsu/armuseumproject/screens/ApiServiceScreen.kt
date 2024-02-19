@@ -2,11 +2,11 @@ package com.marsu.armuseumproject.screens
 
 import android.app.Application
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,10 +30,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -42,7 +44,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
-import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.fragments.SHARED_KEY
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
@@ -78,14 +79,16 @@ class ApiServiceScreen : ComponentActivity() {
     }
 }
 
-// TODO: Dismiss keyboard when search button clicked
+// TODO: Trigger search also with enter
 // TODO: Dismiss keyboard when enter is clicked
+// TODO: Dismiss keyboard when clicked outside of TextField
 @Composable
 fun ApiServiceScreen(
     viewModel: ApiServiceViewModel
 ) {
     //val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
     //val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
     val searchText by viewModel.searchText.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
@@ -103,6 +106,9 @@ fun ApiServiceScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
+        modifier = Modifier.pointerInput(Unit) {
+            detectTapGestures(onTap = { focusManager.clearFocus() })
+        }
     ) {
         /**
          * Search area
@@ -134,7 +140,10 @@ fun ApiServiceScreen(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         },
-                        onClick = viewModel::searchArtsWithInput
+                        onClick = {
+                            viewModel.searchArtsWithInput()
+                            focusManager.clearFocus()
+                        }
                     )
                 },
                 modifier = Modifier.padding(start = 10.dp, top = 10.dp),

@@ -166,11 +166,6 @@ class APIServiceFragment : Fragment() {
         return binding.root
     }
 
-    private fun closeKeyboard() {
-        val kb = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        kb.hideSoftInputFromWindow(view?.windowToken, 0)
-    }
-
     override fun onResume() {
         super.onResume()
         //apiServiceViewModel.updateDepartmentID()
