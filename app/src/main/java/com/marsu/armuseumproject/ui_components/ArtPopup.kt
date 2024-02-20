@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -31,7 +33,6 @@ import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.Artwork
 
 // TODO: Dismiss by clicking outside of the Popup area
-
 @Composable
 fun ArtPopup(art: Artwork, onDismiss: () -> Unit) {
     val imageUri = art.primaryImage.toUri()
@@ -51,8 +52,7 @@ fun ArtPopup(art: Artwork, onDismiss: () -> Unit) {
                 shape = MaterialTheme.shapes.medium
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
-                    //horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     Image(
                         contentScale = ContentScale.Crop,
@@ -71,13 +71,11 @@ fun ArtPopup(art: Artwork, onDismiss: () -> Unit) {
                     }
 
                     Column(
-                        modifier = Modifier.fillMaxSize(),
-                        //.fillMaxSize()
-                        //.padding(top = 60.dp),
+                        modifier = Modifier.fillMaxHeight(0.80f),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Spacer(modifier = Modifier.fillMaxHeight(0.20f))
+                        //Spacer(modifier = Modifier.fillMaxHeight(0.20f))
                         Text(fontWeight = FontWeight.Bold, text = art.title)
                         HorizontalDivider(
                             modifier = Modifier.padding(
@@ -87,22 +85,24 @@ fun ArtPopup(art: Artwork, onDismiss: () -> Unit) {
                         )
                         Text(
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 60.dp),
+                            //modifier = Modifier.padding(bottom = 60.dp),
                             text = art.artistDisplayName
                         )
-                        Spacer(modifier = Modifier.fillMaxHeight(0.20f))
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .offset(y = 4.dp),
-                            //.weight(2f, false),
-                            onClick = { onDismiss() },
-                            shape = MaterialTheme.shapes.extraSmall
-                        ) {
-                            Text(text = stringResource(id = R.string.back))
-                        }
-                    }
+                        //Spacer(modifier = Modifier.fillMaxHeight(0.20f))
 
+                    }
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset(y = 4.dp)
+                            .weight(1f, true)
+                        ,
+                        //.weight(2f, false),
+                        onClick = { onDismiss() },
+                        shape = MaterialTheme.shapes.extraSmall
+                    ) {
+                        Text(text = stringResource(id = R.string.back))
+                    }
                 }
             }
         },
