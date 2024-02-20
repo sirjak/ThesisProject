@@ -64,12 +64,20 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
     private var _isTesting = MutableStateFlow(false)
     var isTesting = _isTesting.asStateFlow()
 
+    private var _isBoob = MutableStateFlow(false)
+    var isBoob = _isBoob.asStateFlow()
+
     fun onArtItemClick() {
         _isTesting.value = true
     }
 
+    fun onFilterButtonClick() {
+        _isBoob.value = true
+    }
+
     fun onDismissPopup() {
         _isTesting.value = false
+        _isBoob.value = false
     }
 
     private val _searchText = MutableStateFlow("")

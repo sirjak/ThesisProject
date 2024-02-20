@@ -54,6 +54,7 @@ import com.marsu.armuseumproject.fragments.SHARED_KEY
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.ui_components.ArtItem
 import com.marsu.armuseumproject.ui_components.ArtPopup
+import com.marsu.armuseumproject.ui_components.SelectDepartmentPopup
 import com.marsu.armuseumproject.viewmodels.ApiServiceViewModel
 import java.lang.reflect.Type
 
@@ -103,6 +104,9 @@ fun ApiServiceScreen(
     val showInfo by viewModel.isTesting.collectAsState()
     var singleArtwork by remember { mutableStateOf<Artwork?>(null) }
 
+    // Variabled associated with SelectDepartmentPopup
+    val showDepartments by viewModel.isBoob.collectAsState()
+
     // Starts search, dismisses the keyboard and clears focus from the TextField
     fun launchSearch() {
         viewModel.searchArtsWithInput()
@@ -129,14 +133,15 @@ fun ApiServiceScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            OutlinedTextField(colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.background,
-                focusedIndicatorColor = MaterialTheme.colorScheme.background,
-                focusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
-                unfocusedTextColor = MaterialTheme.colorScheme.primary
-            ),
+            OutlinedTextField(
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.background,
+                    focusedTextColor = MaterialTheme.colorScheme.primary,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                    unfocusedTextColor = MaterialTheme.colorScheme.primary
+                ),
                 keyboardActions = KeyboardActions(onDone = {
                     launchSearch()
                 }),
@@ -171,7 +176,9 @@ fun ApiServiceScreen(
                 onValueChange = viewModel::onSearchTextChange
             )
 
-            TextButton(modifier = Modifier.padding(end = 10.dp), onClick = { /*TODO*/ }) {
+            TextButton(
+                modifier = Modifier.padding(end = 10.dp),
+                onClick = { viewModel.onFilterButtonClick() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_filter_alt_24),
                     contentDescription = null
@@ -228,6 +235,9 @@ fun ApiServiceScreen(
         }
         if (showInfo && singleArtwork !== null) {
             ArtPopup(art = singleArtwork!!, onDismiss = { viewModel.onDismissPopup() })
+        }
+        if (showDepartments) {
+            SelectDepartmentPopup(onDismiss = { viewModel.onDismissPopup() })
         }
     }
 }
