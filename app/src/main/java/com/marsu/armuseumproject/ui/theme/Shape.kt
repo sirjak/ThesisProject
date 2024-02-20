@@ -1,6 +1,5 @@
 package com.marsu.armuseumproject.ui.theme
 
-import android.view.RoundedCorner
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape

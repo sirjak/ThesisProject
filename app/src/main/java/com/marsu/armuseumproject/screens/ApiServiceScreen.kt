@@ -1,6 +1,5 @@
 package com.marsu.armuseumproject.screens
 
-import ArtPopup
 import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -54,6 +53,7 @@ import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.fragments.SHARED_KEY
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.ui_components.ArtItem
+import com.marsu.armuseumproject.ui_components.ArtPopup
 import com.marsu.armuseumproject.viewmodels.ApiServiceViewModel
 import java.lang.reflect.Type
 
@@ -129,14 +129,15 @@ fun ApiServiceScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            OutlinedTextField(colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.background,
-                focusedIndicatorColor = MaterialTheme.colorScheme.background,
-                focusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
-                unfocusedTextColor = MaterialTheme.colorScheme.primary
-            ),
+            OutlinedTextField(
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.background,
+                    focusedTextColor = MaterialTheme.colorScheme.primary,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                    unfocusedTextColor = MaterialTheme.colorScheme.primary
+                ),
                 keyboardActions = KeyboardActions(onDone = {
                     launchSearch()
                 }),
