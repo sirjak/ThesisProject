@@ -1,6 +1,5 @@
 package com.marsu.armuseumproject.ui_components
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,9 +29,12 @@ import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.viewmodels.ArtPopupViewModel
 
-// TODO: Dismiss by clicking outside of the Popup area
 @Composable
-fun ArtPopup(art: Artwork, onDismiss: () -> Unit, viewModel: ArtPopupViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun ArtPopup(
+    art: Artwork,
+    onDismiss: () -> Unit,
+    viewModel: ArtPopupViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     val imageUri = art.primaryImage.toUri()
 
     Dialog(
@@ -75,7 +77,6 @@ fun ArtPopup(art: Artwork, onDismiss: () -> Unit, viewModel: ArtPopupViewModel =
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        //Spacer(modifier = Modifier.fillMaxHeight(0.20f))
                         Text(fontWeight = FontWeight.Bold, text = art.title)
                         HorizontalDivider(
                             modifier = Modifier.padding(
@@ -85,18 +86,14 @@ fun ArtPopup(art: Artwork, onDismiss: () -> Unit, viewModel: ArtPopupViewModel =
                         )
                         Text(
                             fontWeight = FontWeight.Bold,
-                            //modifier = Modifier.padding(bottom = 60.dp),
                             text = art.artistDisplayName
                         )
-                        //Spacer(modifier = Modifier.fillMaxHeight(0.20f))
 
                     }
                     Button(
                         modifier = Modifier
                             .fillMaxWidth()
-                            //.offset(y = 3.dp)
-                            .weight(1f, true)
-                        ,
+                            .weight(1f, true),
                         onClick = { onDismiss() },
                         shape = MaterialTheme.shapes.extraSmall
                     ) {
@@ -106,7 +103,6 @@ fun ArtPopup(art: Artwork, onDismiss: () -> Unit, viewModel: ArtPopupViewModel =
             }
         },
         onDismissRequest = {
-            Log.d("DISMISS", "Dismiss request detected")
             onDismiss()
         },
         properties = DialogProperties(usePlatformDefaultWidth = false)

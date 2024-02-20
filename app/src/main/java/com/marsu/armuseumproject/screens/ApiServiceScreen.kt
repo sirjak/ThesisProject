@@ -99,9 +99,9 @@ fun ApiServiceScreen(
     val artworks by viewModel.artsList.observeAsState()
     val initialBatch by viewModel.initialBatchLoaded.observeAsState()
 
+    // Variables associated with ArtPopup
     val showInfo by viewModel.isTesting.collectAsState()
-    var boobs by remember { mutableStateOf<Artwork?>(null) }
-    //val showInfo by remember { mutableStateOf(true) }
+    var singleArtwork by remember { mutableStateOf<Artwork?>(null) }
 
     // Starts search, dismisses the keyboard and clears focus from the TextField
     fun launchSearch() {
@@ -129,15 +129,14 @@ fun ApiServiceScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            OutlinedTextField(
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.background,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.background,
-                    focusedTextColor = MaterialTheme.colorScheme.primary,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
-                    unfocusedTextColor = MaterialTheme.colorScheme.primary
-                ),
+            OutlinedTextField(colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.background,
+                focusedIndicatorColor = MaterialTheme.colorScheme.background,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary
+            ),
                 keyboardActions = KeyboardActions(onDone = {
                     launchSearch()
                 }),
@@ -212,7 +211,7 @@ fun ApiServiceScreen(
                             modifier = Modifier
                                 .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                                 .clickable {
-                                    boobs = art
+                                    singleArtwork = art
                                     viewModel.onArtItemClick()
                                 }
                                 .fillMaxWidth())
@@ -227,8 +226,8 @@ fun ApiServiceScreen(
                 }
             }
         }
-        if (showInfo && boobs !== null) {
-            ArtPopup(art = boobs!!, onDismiss = { viewModel.onDismissPopup() })
+        if (showInfo && singleArtwork !== null) {
+            ArtPopup(art = singleArtwork!!, onDismiss = { viewModel.onDismissPopup() })
         }
     }
 }
