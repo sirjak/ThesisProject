@@ -228,7 +228,7 @@ fun ApiServiceScreen(
             }
         }
         if (showInfo && boobs !== null) {
-            ArtPopup(boobs!!) { viewModel.onDismissPopup() }
+            ArtPopup(art = boobs!!, onDismiss = { viewModel.onDismissPopup() })
         }
     }
 }

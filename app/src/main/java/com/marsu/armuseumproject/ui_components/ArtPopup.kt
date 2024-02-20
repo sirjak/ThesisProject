@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -31,10 +28,11 @@ import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.Artwork
+import com.marsu.armuseumproject.viewmodels.ArtPopupViewModel
 
 // TODO: Dismiss by clicking outside of the Popup area
 @Composable
-fun ArtPopup(art: Artwork, onDismiss: () -> Unit) {
+fun ArtPopup(art: Artwork, onDismiss: () -> Unit, viewModel: ArtPopupViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     val imageUri = art.primaryImage.toUri()
 
     Dialog(
@@ -56,7 +54,9 @@ fun ArtPopup(art: Artwork, onDismiss: () -> Unit) {
                 ) {
                     Image(
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxWidth().fillMaxHeight(0.50f),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.50f),
                         painter = rememberAsyncImagePainter(imageUri),
                         contentDescription = null
                     )
@@ -64,7 +64,7 @@ fun ArtPopup(art: Artwork, onDismiss: () -> Unit) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .offset(y = (-4).dp),
-                        onClick = { /*TODO*/ },
+                        onClick = { viewModel.insertImage(art) },
                         shape = MaterialTheme.shapes.extraSmall
                     ) {
                         Text(text = stringResource(id = R.string.save_image))
