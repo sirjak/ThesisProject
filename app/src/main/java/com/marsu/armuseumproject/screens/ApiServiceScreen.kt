@@ -31,6 +31,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -45,10 +48,12 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
+import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.fragments.SHARED_KEY
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.ui_components.ArtItem
+import com.marsu.armuseumproject.ui_components.ArtPopup
 import com.marsu.armuseumproject.viewmodels.ApiServiceViewModel
 import java.lang.reflect.Type
 
@@ -93,6 +98,10 @@ fun ApiServiceScreen(
 
     val artworks by viewModel.artsList.observeAsState()
     val initialBatch by viewModel.initialBatchLoaded.observeAsState()
+
+    // Variables associated with ArtPopup
+    val showInfo by viewModel.isTesting.collectAsState()
+    var singleArtwork by remember { mutableStateOf<Artwork?>(null) }
 
     // Starts search, dismisses the keyboard and clears focus from the TextField
     fun launchSearch() {
@@ -202,7 +211,8 @@ fun ApiServiceScreen(
                             modifier = Modifier
                                 .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                                 .clickable {
-                                    /* TODO */
+                                    singleArtwork = art
+                                    viewModel.onArtItemClick()
                                 }
                                 .fillMaxWidth())
 
@@ -215,6 +225,9 @@ fun ApiServiceScreen(
                     }
                 }
             }
+        }
+        if (showInfo && singleArtwork !== null) {
+            ArtPopup(art = singleArtwork!!, onDismiss = { viewModel.onDismissPopup() })
         }
     }
 }

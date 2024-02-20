@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 /**
  * ViewModel for ArtInfoFragment. Provides functionality for adding API images to Room and internal storage.
  */
-class ArtInfoViewModel(val art: Artwork) : ViewModel() {
+class ArtPopupViewModel : ViewModel() {
 
     val saveSuccess = MutableLiveData(false)
     val savedText = MutableLiveData(MyApp.appContext.getString(R.string.save_image))
@@ -21,7 +21,7 @@ class ArtInfoViewModel(val art: Artwork) : ViewModel() {
     /**
      * Saves the image to the internal storage and Room DB and set indicators for the UI.
      */
-    fun insertImage() {
+    fun insertImage(art: Artwork) {
         viewModelScope.launch {
             saveSuccess.value = InternalStorageService.saveApiArtWorkToRoom(art)
             if (saveSuccess.value == true) {

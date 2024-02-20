@@ -4,7 +4,7 @@
     <string name="add_artwork">Lisää</string>
     <string name="ar_selection">AR Valinta</string>
     <string name="artist">Tekijä</string>
-    <string name="back">Takaisin</string>
+    <string name="back">TAKAISIN</string>
     <string name="chosen_artwork">Valittu taideteos:</string>
     <string name="classification">Taidelaji</string>
     <string name="delete_current">Poista nykyinen taideteos</string>
@@ -46,7 +46,7 @@
     <string name="reset">Tyhjennä</string>
     <string name="result">tulos</string>
     <string name="results">tulosta</string>
-    <string name="save_image">Tallenna kuva</string>
+    <string name="save_image">TALLENNA KUVA</string>
     <string name="saveButton">Tallenna</string>
     <string name="saved">Kuva tallennettu</string>
     <string name="search">Etsi</string>
