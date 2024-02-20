@@ -71,7 +71,7 @@ fun ArtPopup(art: Artwork, onDismiss: () -> Unit) {
                     }
 
                     Column(
-                        modifier = Modifier.fillMaxHeight(0.80f),
+                        modifier = Modifier.fillMaxHeight(0.83f),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -94,10 +94,9 @@ fun ArtPopup(art: Artwork, onDismiss: () -> Unit) {
                     Button(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .offset(y = 4.dp)
+                            //.offset(y = 3.dp)
                             .weight(1f, true)
                         ,
-                        //.weight(2f, false),
                         onClick = { onDismiss() },
                         shape = MaterialTheme.shapes.extraSmall
                     ) {
