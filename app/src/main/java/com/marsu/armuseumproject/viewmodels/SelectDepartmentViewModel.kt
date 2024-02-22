@@ -2,6 +2,7 @@ package com.marsu.armuseumproject.viewmodels
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.activities.SelectDepartmentActivity
@@ -10,8 +11,7 @@ import com.marsu.armuseumproject.activities.SelectDepartmentActivity
  * ViewModel for SelectDepartmentActivity. Provides functionality for selecting a department and saving it to SharedPreferences.
  */
 class SelectDepartmentViewModel(val context: SelectDepartmentActivity) : ViewModel() {
-
-    /**
+     /**
      * Set selected department
      */
     fun setSelectedDepartmentToPreferences(id: Int = 0, btnId: Int = 0, name: String = "") {
