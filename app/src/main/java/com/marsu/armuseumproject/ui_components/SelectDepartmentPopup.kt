@@ -12,6 +12,7 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
@@ -37,15 +38,34 @@ fun SelectDepartmentPopup(onDismiss: () -> Unit) {
                     .fillMaxHeight(0.80f),
                 shape = MaterialTheme.shapes.large
             ) {
-                LazyColumn(modifier = Modifier.selectableGroup()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .selectableGroup()
+                        .weight(0.94f)
+                ) {
                     itemsIndexed(options) { _, option ->
                         DepartmentItem(department = option)
                     }
                 }
 
-                Row {
-                    Button(onClick = { /*TODO*/ }) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.06f),
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Button(
+                        modifier = Modifier.fillMaxWidth(0.5f),
+                        onClick = { /*TODO*/ },
+                        shape = MaterialTheme.shapes.extraSmall
+                    ) {
                         Text(text = stringResource(id = R.string.reset))
+                    }
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { onDismiss() },
+                        shape = MaterialTheme.shapes.extraSmall
+                    ) {
                         Text(text = stringResource(id = R.string.back))
                     }
                 }

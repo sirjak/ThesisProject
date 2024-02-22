@@ -43,7 +43,7 @@
     <string name="open_selectFromGallery">Avaa SFG</string>
     <string name="pickImageToast">Galleriasta pitää olla valittuna kuva ennen sen tallentamista</string>
     <string name="phone_rotation_warning">Pidä puhelintasi pystyasennossa!</string>
-    <string name="reset">Tyhjennä</string>
+    <string name="reset">TYHJENNÄ</string>
     <string name="result">tulos</string>
     <string name="results">tulosta</string>
     <string name="save_image">TALLENNA KUVA</string>
