@@ -103,8 +103,31 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      * Get Art ids and store them for later usage.
      */
     private suspend fun getArtIDs(): MutableList<Int> {
-
         return if (searchText.value.isNotEmpty()) {
+
+            val response = if (_dood.value != 0) {
+                Log.d("_HAISTA", _dood.value.toString())
+                Log.d("HAISTA", dood.value.toString())
+                service.getArtIDs(
+                    q = searchText.value.toString(), departmentId = _dood.value ?: 0
+                )
+            } else {
+                service.getArtIDs(q = searchText.value.toString())
+            }
+
+            if (response.objectIDs.isNullOrEmpty()) {
+                Log.d("getArtIDs", "No objectIDs found")
+            } else {
+                Log.d("getArtIDs", "Found ${response.objectIDs.size} ids")
+            }
+
+            response.objectIDs
+
+        } else {
+            mutableListOf()
+        }
+
+        /*return if (searchText.value.isNotEmpty()) {
 
             val response = if (departmentId.value != 0) {
                 service.getArtIDs(
@@ -124,7 +147,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
         } else {
             mutableListOf()
-        }
+        }*/
     }
 
 
@@ -191,7 +214,6 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      * Searches the API if the searchInput value is valid. searchInput must have at least a length of 2.
      */
     fun searchArtsWithInput() {
-        Log.d("searchText", searchText.value)
         if (searchText.value.isEmpty()) {
             Log.i("SEARCH", "Empty searchText")
             return
@@ -205,6 +227,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
         }
         _artsList.value = mutableListOf()
         getArts(true)
+        Log.d("searchText", searchText.value)
     }
 
 
@@ -212,14 +235,16 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      * Resets the selected department data from SharedPreferences. Furthermore, updates the LiveData objects regarding the department info.
      */
     fun resetSelectedDepartment() {
-        val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        /*val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
         val editor = pref.edit()
         editor.putInt("selectedDepartment", 0)
         editor.putInt("selectedDepartmentRadioButton", 0)
         editor.putString("selectedDepartmentName", "")
         editor.apply()
         //updateDepartmentID()
-        getArts(true)
+        getArts(true)*/
+        _dood.value = 0
+        _body.value = ""
     }
 
 

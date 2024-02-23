@@ -111,19 +111,25 @@ fun ApiServiceScreen(
 
     // Variabled associated with SelectDepartmentPopup
     val showDepartments by viewModel.isDepartmentPopupOpen.collectAsState()
-    val levi by viewModel.dood.collectAsState()
-    val homo by viewModel.body.collectAsState()
+    val departmentId by viewModel.dood.collectAsState()
+    val departmentName by viewModel.body.collectAsState()
     //var selectedDepartmentId by remember { mutableStateOf<Int?>(null) }
     //Log.d("selectedDepartmentId", selectedDepartmentId.toString())
-    Log.d("Levi", levi.toString())
+    Log.d("Levi", departmentId.toString())
 
     if (!showDepartments) {
         Log.d("IF", "In the if statement for SelectDepartmentPopup not showing")
-        val selectedDepartmentName = preferencesManager.getData("selectedDepartmentName", null)
-        Log.d("IF get result", selectedDepartmentName.toString())
-        if (selectedDepartmentName !== null && selectedDepartmentName !== "" && levi == 0) {
-            viewModel.updateDepartmentID(selectedDepartmentName.toInt())
-            viewModel.updateDepartmentName(stringResource(id = selectedDepartmentName.toInt()))
+        val nameId = preferencesManager.getData("selectedDepartmentName", "")
+        val id = preferencesManager.getData("selectedDepartment", "")
+        Log.d("IF departmentNameId result", nameId.toString())
+        Log.d("IF departmentId result", id.toString())
+
+        if (nameId !== null && nameId !== "" && id !== null && id !== "") {
+            if (departmentId == 0 || departmentId != id.toInt()) {
+                viewModel.updateDepartmentID(id.toInt())
+                viewModel.updateDepartmentName(stringResource(id = nameId.toInt()))
+                viewModel.searchArtsWithInput()
+            }
         }
     }
 
@@ -208,7 +214,7 @@ fun ApiServiceScreen(
 
         }
         // Filter tag
-        if (levi != 0) {
+        if (departmentId != 0) {
             //Log.d("WTF", selectedDepartmentId.toString())
             Column(
                 horizontalAlignment = Alignment.Start,
@@ -231,7 +237,7 @@ fun ApiServiceScreen(
                     label = {
                         Text(
                             modifier = Modifier.wrapContentHeight(Alignment.CenterVertically),
-                            text = homo
+                            text = departmentName
                         )
                     },
                     leadingIcon = {
@@ -246,7 +252,8 @@ fun ApiServiceScreen(
                             onClick = {
                                 preferencesManager.saveData("selectedDepartment", "")
                                 preferencesManager.saveData("selectedDepartmentName", "")
-                                viewModel.updateDepartmentID(0)
+                                viewModel.resetSelectedDepartment()
+                                launchSearch()
                             }
                         )
                     },
@@ -294,7 +301,7 @@ fun ApiServiceScreen(
                     Text(text = stringResource(id = selectedDepartment!!))
                 }*/
             }
-            // TODO: Launch search here
+            //viewModel.getArts(true)
         }
         /**
          * Result area

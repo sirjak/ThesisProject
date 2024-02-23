@@ -51,7 +51,7 @@ fun SelectDepartmentPopup(onDismiss: () -> Unit) {
     }
 
     fun addToSharedPrefs(department: Department) {
-        Log.d("PREFS", "In addToSharedPrefs")
+        Log.d("PREFS", department.toString())
         preferencesManager.saveData("selectedDepartment", department.id.toString())
         preferencesManager.saveData(
             "selectedDepartmentName",
