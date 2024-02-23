@@ -112,6 +112,7 @@ fun ApiServiceScreen(
     // Variabled associated with SelectDepartmentPopup
     val showDepartments by viewModel.isDepartmentPopupOpen.collectAsState()
     val levi by viewModel.dood.collectAsState()
+    val homo by viewModel.body.collectAsState()
     //var selectedDepartmentId by remember { mutableStateOf<Int?>(null) }
     //Log.d("selectedDepartmentId", selectedDepartmentId.toString())
     Log.d("Levi", levi.toString())
@@ -120,7 +121,10 @@ fun ApiServiceScreen(
         Log.d("IF", "In the if statement for SelectDepartmentPopup not showing")
         val selectedDepartmentName = preferencesManager.getData("selectedDepartmentName", null)
         Log.d("IF get result", selectedDepartmentName.toString())
-        if (selectedDepartmentName !== null && selectedDepartmentName !== "" && levi == 0) viewModel.updateDepartmentID(selectedDepartmentName.toInt())
+        if (selectedDepartmentName !== null && selectedDepartmentName !== "" && levi == 0) {
+            viewModel.updateDepartmentID(selectedDepartmentName.toInt())
+            viewModel.updateDepartmentName(stringResource(id = selectedDepartmentName.toInt()))
+        }
     }
 
     // Starts search, dismisses the keyboard and clears focus from the TextField
@@ -227,9 +231,7 @@ fun ApiServiceScreen(
                     label = {
                         Text(
                             modifier = Modifier.wrapContentHeight(Alignment.CenterVertically),
-                            text = stringResource(
-                                id = levi
-                            )
+                            text = homo
                         )
                     },
                     leadingIcon = {

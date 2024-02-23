@@ -73,6 +73,9 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
     private var _dood = MutableStateFlow(0)
     var dood = _dood.asStateFlow()
 
+    private var _body = MutableStateFlow("")
+    var body = _body.asStateFlow()
+
     fun testOne() {
 
     }
@@ -242,9 +245,10 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
     /**
      * Updates the departmentText LiveData object.
      */
-    private fun updateDepartmentName() {
-        val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-        _departmentText.value = pref.getString("selectedDepartmentName", "")
+    fun updateDepartmentName(name: String) {
+        /*val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        _departmentText.value = pref.getString("selectedDepartmentName", "")*/
+        _body.value = name
     }
 
 
