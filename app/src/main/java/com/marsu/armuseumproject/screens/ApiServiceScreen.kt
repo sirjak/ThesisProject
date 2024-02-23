@@ -111,15 +111,16 @@ fun ApiServiceScreen(
 
     // Variabled associated with SelectDepartmentPopup
     val showDepartments by viewModel.isDepartmentPopupOpen.collectAsState()
-    var selectedDepartmentId by remember { mutableStateOf<Int?>(null) }
-    Log.d("selectedDepartmentId", selectedDepartmentId.toString())
+    val levi by viewModel.dood.collectAsState()
+    //var selectedDepartmentId by remember { mutableStateOf<Int?>(null) }
+    //Log.d("selectedDepartmentId", selectedDepartmentId.toString())
+    Log.d("Levi", levi.toString())
 
     if (!showDepartments) {
         Log.d("IF", "In the if statement for SelectDepartmentPopup not showing")
         val selectedDepartmentName = preferencesManager.getData("selectedDepartmentName", null)
         Log.d("IF get result", selectedDepartmentName.toString())
-        selectedDepartmentId =
-            if (selectedDepartmentName !== null && selectedDepartmentName !== "") selectedDepartmentName.toInt() else null
+        if (selectedDepartmentName !== null && selectedDepartmentName !== "" && levi == 0) viewModel.updateDepartmentID(selectedDepartmentName.toInt())
     }
 
     // Starts search, dismisses the keyboard and clears focus from the TextField
@@ -203,8 +204,8 @@ fun ApiServiceScreen(
 
         }
         // Filter tag
-        if (selectedDepartmentId !== null) {
-            Log.d("WTF", selectedDepartmentId.toString())
+        if (levi != 0) {
+            //Log.d("WTF", selectedDepartmentId.toString())
             Column(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
@@ -227,7 +228,7 @@ fun ApiServiceScreen(
                         Text(
                             modifier = Modifier.wrapContentHeight(Alignment.CenterVertically),
                             text = stringResource(
-                                id = selectedDepartmentId!!
+                                id = levi
                             )
                         )
                     },
@@ -243,7 +244,7 @@ fun ApiServiceScreen(
                             onClick = {
                                 preferencesManager.saveData("selectedDepartment", "")
                                 preferencesManager.saveData("selectedDepartmentName", "")
-                                selectedDepartmentId = null
+                                viewModel.updateDepartmentID(0)
                             }
                         )
                     },
@@ -291,7 +292,7 @@ fun ApiServiceScreen(
                     Text(text = stringResource(id = selectedDepartment!!))
                 }*/
             }
-
+            // TODO: Launch search here
         }
         /**
          * Result area
