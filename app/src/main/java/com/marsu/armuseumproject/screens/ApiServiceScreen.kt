@@ -2,6 +2,7 @@ package com.marsu.armuseumproject.screens
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -14,10 +15,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -91,6 +94,7 @@ fun ApiServiceScreen(
     viewModel: ApiServiceViewModel
 ) {
     val focusManager = LocalFocusManager.current
+    val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
 
     val searchText by viewModel.searchText.collectAsState()
     val isLoading by viewModel.loadingResults.observeAsState()
@@ -106,6 +110,16 @@ fun ApiServiceScreen(
 
     // Variabled associated with SelectDepartmentPopup
     val showDepartments by viewModel.isBoob.collectAsState()
+    var selectedDepartmentId by remember { mutableStateOf<Int?>(null) }
+    Log.d("selectedDepartmentId", selectedDepartmentId.toString())
+
+    if (!showDepartments) {
+        Log.d("IF", "In the if statement for SelectDepartmentPopup not showing")
+        val selectedDepartmentName = preferencesManager.getData("selectedDepartmentName", null)
+        Log.d("IF get result", selectedDepartmentName.toString())
+        selectedDepartmentId =
+            if (selectedDepartmentName !== null && selectedDepartmentName !== "") selectedDepartmentName.toInt() else null
+    }
 
     // Starts search, dismisses the keyboard and clears focus from the TextField
     fun launchSearch() {
@@ -129,7 +143,7 @@ fun ApiServiceScreen(
                 .background(MaterialTheme.colorScheme.onPrimary)
                 .padding(bottom = 10.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
 
@@ -185,8 +199,94 @@ fun ApiServiceScreen(
                 )
                 Text(text = stringResource(id = R.string.filter))
             }
-        }
 
+        }
+        // Filter tag
+        if (selectedDepartmentId !== null) {
+            Log.d("WTF", selectedDepartmentId.toString())
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.onPrimary)
+                    .fillMaxWidth()
+                    .padding(start = 10.dp, bottom = 10.dp)
+            ) {
+                FilterChip(
+                    /*colors = ChipColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        disabledContainerColor = MaterialTheme.colorScheme.primary,
+                        labelColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledLabelColor = MaterialTheme.colorScheme.onPrimary,
+                        leadingIconContentColor = MaterialTheme.colorScheme.onBackground,
+                        disabledLeadingIconContentColor = MaterialTheme.colorScheme.onBackground,
+                        trailingIconContentColor = MaterialTheme.colorScheme.onBackground,
+                        disabledTrailingIconContentColor = MaterialTheme.colorScheme.onBackground
+                    ),*/
+                    label = {
+                            Text(modifier = Modifier.wrapContentHeight(Alignment.CenterVertically), text = "Label")
+                    },
+                    leadingIcon = {
+                        IconButton(
+                            content = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_baseline_close_24),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onBackground
+                                )
+                            },
+                            onClick = {
+                                preferencesManager.saveData("selectedDepartment", "")
+                                preferencesManager.saveData("selectedDepartmentName", "")
+                                selectedDepartmentId = null
+                            }
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    onClick = { /*TODO*/ },
+                    selected = true,
+                    shape = MaterialTheme.shapes.large
+                )
+                /*OutlinedTextField(
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.primary,
+                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.primary,
+                        unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
+                    ),
+                    leadingIcon = {
+                        IconButton(
+                            content = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_baseline_close_24),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onBackground
+                                )
+                            },
+                            onClick = { *//* TODO *//* }
+                        )
+                    },
+                    modifier = Modifier
+                        .height(50.dp)
+                        .fillMaxWidth(0.5f),//.padding(bottom = 10.dp),
+                    readOnly = true,
+                    shape = MaterialTheme.shapes.extraLarge,
+                    //textStyle = TextStyle(fontSize = 12.sp),
+                    value = stringResource(id = selectedDepartment!!),
+                    onValueChange = {})*/
+                /*Button(modifier = Modifier.fillMaxWidth(0.5f), onClick = { *//*TODO*//* }) {
+                    Icon(
+                        modifier = Modifier.a,
+                        painter = painterResource(id = R.drawable.ic_baseline_close_24),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                    Text(text = stringResource(id = selectedDepartment!!))
+                }*/
+            }
+
+        }
         /**
          * Result area
          */
