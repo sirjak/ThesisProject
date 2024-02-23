@@ -15,8 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,6 +36,7 @@ fun SelectDepartmentPopup(onDismiss: () -> Unit) {
     val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
 
     val options = Datasource().loadDepartments()
+    var optionInPrefs by remember { mutableStateOf<Department?>(null) }
     var (selectedOption, onOptionSelected) = remember { mutableStateOf<Department?>(null) }
     Log.d("selectedOption", selectedOption.toString())
 
@@ -42,6 +45,7 @@ fun SelectDepartmentPopup(onDismiss: () -> Unit) {
         val stringId = preferencesManager.getData("selectedDepartmentName", null)
         if (id !== null && id !== "" && stringId !== null && stringId !== "") {
             val department = Department(stringId.toInt(), id.toInt())
+            optionInPrefs = department
             selectedOption = department
         }
     }
@@ -110,7 +114,7 @@ fun SelectDepartmentPopup(onDismiss: () -> Unit) {
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            if (selectedOption !== null) {
+                            if (selectedOption !== null && optionInPrefs !== selectedOption) {
                                 addToSharedPrefs(selectedOption)
                             }
                             onDismiss()
@@ -123,7 +127,7 @@ fun SelectDepartmentPopup(onDismiss: () -> Unit) {
             }
         },
         onDismissRequest = {
-            if (selectedOption !== null) {
+            if (selectedOption !== null && optionInPrefs !== selectedOption) {
                 addToSharedPrefs(selectedOption)
             }
             onDismiss()
