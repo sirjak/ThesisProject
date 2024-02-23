@@ -61,23 +61,23 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
     /**
      * Testing stuff here
      */
-    private var _isTesting = MutableStateFlow(false)
-    var isTesting = _isTesting.asStateFlow()
+    private var _isArtPopupOpen = MutableStateFlow(false)
+    var isArtPopupOpen = _isArtPopupOpen.asStateFlow()
 
-    private var _isBoob = MutableStateFlow(false)
-    var isBoob = _isBoob.asStateFlow()
+    private var _isDepartmentPopupOpen = MutableStateFlow(false)
+    var isDepartmentPopupOpen = _isDepartmentPopupOpen.asStateFlow()
 
     fun onArtItemClick() {
-        _isTesting.value = true
+        _isArtPopupOpen.value = true
     }
 
     fun onFilterButtonClick() {
-        _isBoob.value = true
+        _isDepartmentPopupOpen.value = true
     }
 
     fun onDismissPopup() {
-        _isTesting.value = false
-        _isBoob.value = false
+        _isArtPopupOpen.value = false
+        _isDepartmentPopupOpen.value = false
     }
 
     private val _searchText = MutableStateFlow("")
@@ -120,7 +120,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      * Updates the departmentId and departmentText LiveData objects.
      */
     fun updateDepartmentID() {
-        val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        /*val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
         val newDep = pref.getInt("selectedDepartment", 0)
         if (newDep != departmentId.value) {
             _departmentId.value = newDep
@@ -128,7 +128,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
         } else {
             _departmentId.value = newDep
         }
-        updateDepartmentName()
+        updateDepartmentName()*/
     }
 
 
