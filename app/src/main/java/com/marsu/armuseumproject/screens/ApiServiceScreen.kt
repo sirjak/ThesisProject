@@ -105,11 +105,11 @@ fun ApiServiceScreen(
     val initialBatch by viewModel.initialBatchLoaded.observeAsState()
 
     // Variables associated with ArtPopup
-    val showInfo by viewModel.isTesting.collectAsState()
+    val showInfo by viewModel.isArtPopupOpen.collectAsState()
     var singleArtwork by remember { mutableStateOf<Artwork?>(null) }
 
     // Variabled associated with SelectDepartmentPopup
-    val showDepartments by viewModel.isBoob.collectAsState()
+    val showDepartments by viewModel.isDepartmentPopupOpen.collectAsState()
     var selectedDepartmentId by remember { mutableStateOf<Int?>(null) }
     Log.d("selectedDepartmentId", selectedDepartmentId.toString())
 
@@ -223,7 +223,12 @@ fun ApiServiceScreen(
                         disabledTrailingIconContentColor = MaterialTheme.colorScheme.onBackground
                     ),*/
                     label = {
-                            Text(modifier = Modifier.wrapContentHeight(Alignment.CenterVertically), text = "Label")
+                        Text(
+                            modifier = Modifier.wrapContentHeight(Alignment.CenterVertically),
+                            text = stringResource(
+                                id = selectedDepartmentId!!
+                            )
+                        )
                     },
                     leadingIcon = {
                         IconButton(

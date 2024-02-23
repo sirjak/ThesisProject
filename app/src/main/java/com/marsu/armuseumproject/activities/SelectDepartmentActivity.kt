@@ -26,7 +26,7 @@ class SelectDepartmentActivity : PopupActivity() {
 
         binding.departmentBackButton.setOnClickListener { finish() }
         binding.departmentResetButton.setOnClickListener {
-            selectDepartmentViewModel.setSelectedDepartmentToPreferences()
+            //selectDepartmentViewModel.setSelectedDepartmentToPreferences()
             binding.departmentRadioGroup.clearCheck()
         }
 

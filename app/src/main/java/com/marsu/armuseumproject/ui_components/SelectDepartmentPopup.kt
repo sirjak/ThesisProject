@@ -34,8 +34,17 @@ fun SelectDepartmentPopup(onDismiss: () -> Unit) {
     val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
 
     val options = Datasource().loadDepartments()
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf<Department?>(null) }
+    var (selectedOption, onOptionSelected) = remember { mutableStateOf<Department?>(null) }
     Log.d("selectedOption", selectedOption.toString())
+
+    if (selectedOption == null) {
+        val id = preferencesManager.getData("selectedDepartment", null)
+        val stringId = preferencesManager.getData("selectedDepartmentName", null)
+        if (id !== null && id !== "" && stringId !== null && stringId !== "") {
+            val department = Department(stringId.toInt(), id.toInt())
+            selectedOption = department
+        }
+    }
 
     fun addToSharedPrefs(department: Department) {
         Log.d("PREFS", "In addToSharedPrefs")

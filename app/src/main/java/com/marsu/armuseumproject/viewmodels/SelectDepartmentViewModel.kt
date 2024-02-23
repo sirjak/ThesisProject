@@ -13,14 +13,14 @@ class SelectDepartmentViewModel(val context: SelectDepartmentActivity) : ViewMod
     /**
      * Set selected department
      */
-    fun setSelectedDepartmentToPreferences(id: Int = 0, btnId: Int = 0, name: String = "") {
+    /*fun setSelectedDepartmentToPreferences(id: Int = 0, btnId: Int = 0, name: String = "") {
         val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
         val editor = pref.edit()
         editor.putInt("selectedDepartment", id)
         editor.putInt("selectedDepartmentRadioButton", btnId)
         editor.putString("selectedDepartmentName", name)
         editor.apply()
-    }
+    }*/
 
     /**
      * Return selected department name
@@ -36,7 +36,7 @@ class SelectDepartmentViewModel(val context: SelectDepartmentActivity) : ViewMod
     fun setDepartmentInfo(int: Int) {
 
         fun setToPreferences(id: Int, nameId: Int) {
-            setSelectedDepartmentToPreferences(id, int, context.getString(nameId))
+            //setSelectedDepartmentToPreferences(id, int, context.getString(nameId))
         }
 
         when (int) {
