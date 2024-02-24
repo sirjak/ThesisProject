@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,8 +44,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
@@ -215,7 +216,6 @@ fun ApiServiceScreen(
         }
         // Filter tag
         if (departmentId != 0) {
-            //Log.d("WTF", selectedDepartmentId.toString())
             Column(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
@@ -223,46 +223,7 @@ fun ApiServiceScreen(
                     .fillMaxWidth()
                     .padding(start = 10.dp, bottom = 10.dp)
             ) {
-                FilterChip(
-                    /*colors = ChipColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        disabledContainerColor = MaterialTheme.colorScheme.primary,
-                        labelColor = MaterialTheme.colorScheme.onPrimary,
-                        disabledLabelColor = MaterialTheme.colorScheme.onPrimary,
-                        leadingIconContentColor = MaterialTheme.colorScheme.onBackground,
-                        disabledLeadingIconContentColor = MaterialTheme.colorScheme.onBackground,
-                        trailingIconContentColor = MaterialTheme.colorScheme.onBackground,
-                        disabledTrailingIconContentColor = MaterialTheme.colorScheme.onBackground
-                    ),*/
-                    label = {
-                        Text(
-                            modifier = Modifier.wrapContentHeight(Alignment.CenterVertically),
-                            text = departmentName
-                        )
-                    },
-                    leadingIcon = {
-                        IconButton(
-                            content = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_baseline_close_24),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onBackground
-                                )
-                            },
-                            onClick = {
-                                preferencesManager.saveData("selectedDepartment", "")
-                                preferencesManager.saveData("selectedDepartmentName", "")
-                                viewModel.resetSelectedDepartment()
-                                launchSearch()
-                            }
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(0.5f),
-                    onClick = { /*TODO*/ },
-                    selected = true,
-                    shape = MaterialTheme.shapes.large
-                )
-                /*OutlinedTextField(
+                OutlinedTextField(
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.primary,
                         focusedIndicatorColor = MaterialTheme.colorScheme.primary,
@@ -280,28 +241,23 @@ fun ApiServiceScreen(
                                     tint = MaterialTheme.colorScheme.onBackground
                                 )
                             },
-                            onClick = { *//* TODO *//* }
+                            onClick = {
+                                preferencesManager.saveData("selectedDepartment", "")
+                                preferencesManager.saveData("selectedDepartmentName", "")
+                                viewModel.resetSelectedDepartment()
+                                launchSearch()
+                            }
                         )
                     },
                     modifier = Modifier
-                        .height(50.dp)
-                        .fillMaxWidth(0.5f),//.padding(bottom = 10.dp),
+                        .fillMaxWidth(0.5f)
+                        .wrapContentHeight(Alignment.CenterVertically),
                     readOnly = true,
                     shape = MaterialTheme.shapes.extraLarge,
-                    //textStyle = TextStyle(fontSize = 12.sp),
-                    value = stringResource(id = selectedDepartment!!),
-                    onValueChange = {})*/
-                /*Button(modifier = Modifier.fillMaxWidth(0.5f), onClick = { *//*TODO*//* }) {
-                    Icon(
-                        modifier = Modifier.a,
-                        painter = painterResource(id = R.drawable.ic_baseline_close_24),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                    Text(text = stringResource(id = selectedDepartment!!))
-                }*/
+                    textStyle = TextStyle(fontSize = 14.sp),
+                    value = departmentName,
+                    onValueChange = {})
             }
-            //viewModel.getArts(true)
         }
         /**
          * Result area
