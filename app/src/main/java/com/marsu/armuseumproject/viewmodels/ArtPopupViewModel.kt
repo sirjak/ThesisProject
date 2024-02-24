@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
  */
 class ArtPopupViewModel : ViewModel() {
 
-    val saveSuccess = MutableLiveData(false)
-    val savedText = MutableLiveData(MyApp.appContext.getString(R.string.save_image))
+    private val saveSuccess = MutableLiveData(false)
+    private val savedText = MutableLiveData(MyApp.appContext.getString(R.string.save_image))
 
     /**
      * Saves the image to the internal storage and Room DB and set indicators for the UI.
