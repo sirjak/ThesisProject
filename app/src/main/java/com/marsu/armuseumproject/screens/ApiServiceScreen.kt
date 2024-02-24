@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
@@ -42,8 +43,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
@@ -54,6 +57,7 @@ import com.marsu.armuseumproject.fragments.SHARED_KEY
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.ui_components.ArtItem
 import com.marsu.armuseumproject.ui_components.ArtPopup
+import com.marsu.armuseumproject.ui_components.SelectDepartmentPopup
 import com.marsu.armuseumproject.viewmodels.ApiServiceViewModel
 import java.lang.reflect.Type
 
@@ -90,18 +94,38 @@ fun ApiServiceScreen(
     viewModel: ApiServiceViewModel
 ) {
     val focusManager = LocalFocusManager.current
+    val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
 
     val searchText by viewModel.searchText.collectAsState()
-    val isLoading by viewModel.loadingResults.observeAsState()
-    val resultsText by viewModel.resultText.observeAsState()
+    val isLoading by viewModel.loadingResults.collectAsState()
+    val resultsText by viewModel.resultText.collectAsState()
     val noResultText = stringResource(id = R.string.no_result)
 
     val artworks by viewModel.artsList.observeAsState()
-    val initialBatch by viewModel.initialBatchLoaded.observeAsState()
+    val initialBatch by viewModel.initialBatchLoaded.collectAsState()
 
     // Variables associated with ArtPopup
-    val showInfo by viewModel.isTesting.collectAsState()
+    val showInfo by viewModel.isArtPopupOpen.collectAsState()
     var singleArtwork by remember { mutableStateOf<Artwork?>(null) }
+
+    // Variables associated with SelectDepartmentPopup
+    val showDepartments by viewModel.isDepartmentPopupOpen.collectAsState()
+    val departmentId by viewModel.departmentID.collectAsState()
+    val departmentName by viewModel.departmentName.collectAsState()
+
+    // Retrieve department selection information from shared preferences
+    if (!showDepartments) {
+        val nameId = preferencesManager.getData("selectedDepartmentName", "")
+        val id = preferencesManager.getData("selectedDepartment", "")
+
+        if (nameId !== null && nameId !== "" && id !== null && id !== "") {
+            if (departmentId == 0 || departmentId != id.toInt()) {
+                viewModel.updateDepartmentID(id.toInt())
+                viewModel.updateDepartmentName(stringResource(id = nameId.toInt()))
+                viewModel.searchArtsWithInput()
+            }
+        }
+    }
 
     // Starts search, dismisses the keyboard and clears focus from the TextField
     fun launchSearch() {
@@ -125,10 +149,9 @@ fun ApiServiceScreen(
                 .background(MaterialTheme.colorScheme.onPrimary)
                 .padding(bottom = 10.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             OutlinedTextField(colors = TextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.background,
                 focusedIndicatorColor = MaterialTheme.colorScheme.background,
@@ -171,7 +194,8 @@ fun ApiServiceScreen(
                 onValueChange = viewModel::onSearchTextChange
             )
 
-            TextButton(modifier = Modifier.padding(end = 10.dp), onClick = { /*TODO*/ }) {
+            TextButton(modifier = Modifier.padding(end = 10.dp),
+                onClick = { viewModel.onFilterButtonClick() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_filter_alt_24),
                     contentDescription = null
@@ -180,12 +204,53 @@ fun ApiServiceScreen(
             }
         }
 
+        // Filter tag
+        if (departmentId != 0) {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.onPrimary)
+                    .fillMaxWidth()
+                    .padding(start = 10.dp, bottom = 10.dp)
+            ) {
+                OutlinedTextField(colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.primary,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                    leadingIcon = {
+                        IconButton(content = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_baseline_close_24),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }, onClick = {
+                            preferencesManager.saveData("selectedDepartment", "")
+                            preferencesManager.saveData("selectedDepartmentName", "")
+                            viewModel.resetSelectedDepartment()
+                            launchSearch()
+                        })
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .wrapContentHeight(Alignment.CenterVertically),
+                    readOnly = true,
+                    shape = MaterialTheme.shapes.extraLarge,
+                    textStyle = TextStyle(fontSize = 14.sp),
+                    value = departmentName,
+                    onValueChange = {})
+            }
+        }
         /**
          * Result area
          */
         HorizontalDivider(modifier = Modifier.shadow(1.dp))
 
-        if (isLoading == true && initialBatch == false) {
+        if (isLoading && !initialBatch) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(all = 20.dp)
@@ -195,14 +260,12 @@ fun ApiServiceScreen(
                 trackColor = MaterialTheme.colorScheme.onPrimary
             )
         } else {
-            (if (resultsText !== "") resultsText else noResultText)?.let {
-                Text(
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(all = 10.dp),
-                    text = it,
-                    textAlign = TextAlign.Center
-                )
-            }
+            Text(
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(all = 10.dp),
+                text = (if (resultsText !== "") resultsText else noResultText),
+                textAlign = TextAlign.Center
+            )
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 if (!artworks.isNullOrEmpty()) {
@@ -218,7 +281,7 @@ fun ApiServiceScreen(
 
                         // Loading more items when getting closer to the bottom
                         if (index >= artworks!!.size - 3) {
-                            if ((viewModel.loadingResults.value == false)) {
+                            if ((!isLoading)) {
                                 viewModel.getArts(false)
                             }
                         }
@@ -228,6 +291,9 @@ fun ApiServiceScreen(
         }
         if (showInfo && singleArtwork !== null) {
             ArtPopup(art = singleArtwork!!, onDismiss = { viewModel.onDismissPopup() })
+        }
+        if (showDepartments) {
+            SelectDepartmentPopup(onDismiss = { viewModel.onDismissPopup() })
         }
     }
 }

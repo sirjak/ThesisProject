@@ -43,7 +43,7 @@
     <string name="open_selectFromGallery">Open SFG</string>
     <string name="pickImageToast">You have to pick image from gallery before saving it</string>
     <string name="phone_rotation_warning">Please hold your phone upright!</string>
-    <string name="reset">Reset</string>
+    <string name="reset">RESET</string>
     <string name="result">result</string>
     <string name="results">results</string>
     <string name="save_image">SAVE IMAGE</string>

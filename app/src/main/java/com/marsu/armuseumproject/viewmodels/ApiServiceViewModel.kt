@@ -1,7 +1,6 @@
 package com.marsu.armuseumproject.viewmodels
 
-import android.content.Context
-import android.content.SharedPreferences
+import android.app.Application
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -21,77 +20,99 @@ import retrofit2.HttpException
 /**
  * ViewModel class for ApiServiceFragment. Contains the data displayed within the Fragment.
  */
-class ApiServiceViewModel(val context: Context) : ViewModel() {
+class ApiServiceViewModel(application: Application) : ViewModel() {
 
-    private val initialBatchSize = 15
     private val service = APIService.service
+    private val initialBatchSize = 15
+    private val paginationAmount = 10
 
-    private val _departmentText = MutableLiveData("")
-    val departmentText: LiveData<String>
-        get() = _departmentText
-
-    private val _resultText = MutableLiveData("")
-    val resultText: LiveData<String>
-        get() = _resultText
-
-    private val _departmentId = MutableLiveData(0)
-    val departmentId: LiveData<Int>
-        get() = _departmentId
+    private val result = application.applicationContext.getString(R.string.result)
+    private val results = application.applicationContext.getString(R.string.results)
+    private val noResults = application.applicationContext.getString(R.string.no_result)
 
     private val _foundIDs = MutableLiveData<MutableList<Int>>()
-
     private val _artsList = MutableLiveData(listOf<Artwork>())
     val artsList: LiveData<List<Artwork>>
         get() = _artsList
 
-    private val _loadingResults = MutableLiveData(false)
-    val loadingResults: LiveData<Boolean>
-        get() = _loadingResults
-
-    private val _initialBatchLoaded = MutableLiveData(false)
-    val initialBatchLoaded: LiveData<Boolean>
-        get() = _initialBatchLoaded
-
-    private val _resultAmount = MutableLiveData(0)
-    private val resultAmount: LiveData<Int>
-        get() = _resultAmount
-
-    val paginationAmount = 10
 
     /**
-     * Testing stuff here
+     * MutableStateFlow variables
      */
-    private var _isTesting = MutableStateFlow(false)
-    var isTesting = _isTesting.asStateFlow()
+    private val _departmentID = MutableStateFlow(0)
+    var departmentID = _departmentID.asStateFlow()
 
-    fun onArtItemClick() {
-        _isTesting.value = true
-    }
+    private val _departmentName = MutableStateFlow("")
+    var departmentName = _departmentName.asStateFlow()
 
-    fun onDismissPopup() {
-        _isTesting.value = false
-    }
+    private val _initialBatchLoaded = MutableStateFlow(false)
+    val initialBatchLoaded = _initialBatchLoaded.asStateFlow()
+
+    private val _loadingResults = MutableStateFlow(false)
+    val loadingResults = _loadingResults.asStateFlow()
+
+    private val _resultAmount = MutableStateFlow(0)
+    private val resultAmount = _resultAmount.asStateFlow()
+
+    private val _resultText = MutableStateFlow("")
+    val resultText = _resultText.asStateFlow()
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
+
+    private val _isArtPopupOpen = MutableStateFlow(false)
+    var isArtPopupOpen = _isArtPopupOpen.asStateFlow()
+
+    private val _isDepartmentPopupOpen = MutableStateFlow(false)
+    var isDepartmentPopupOpen = _isDepartmentPopupOpen.asStateFlow()
+
+
+    /**
+     * Functions to handle MutableStateFlow variable mutations.
+     */
+    fun onArtItemClick() {
+        _isArtPopupOpen.value = true
+    }
+
+    fun onDismissPopup() {
+        _isArtPopupOpen.value = false
+        _isDepartmentPopupOpen.value = false
+    }
+
+    fun onFilterButtonClick() {
+        _isDepartmentPopupOpen.value = true
+    }
 
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
 
+    fun resetSelectedDepartment() {
+        _departmentID.value = 0
+        _departmentName.value = ""
+    }
+
+    fun updateDepartmentID(id: Int) {
+        _departmentID.value = id
+    }
+
+    fun updateDepartmentName(name: String) {
+        _departmentName.value = name
+    }
+
+
     /**
      * Get Art ids and store them for later usage.
      */
     private suspend fun getArtIDs(): MutableList<Int> {
-
         return if (searchText.value.isNotEmpty()) {
 
-            val response = if (departmentId.value != 0) {
+            val response = if (_departmentID.value != 0) {
                 service.getArtIDs(
-                    q = searchText.value.toString(), departmentId = departmentId.value ?: 0
+                    q = searchText.value, departmentId = _departmentID.value
                 )
             } else {
-                service.getArtIDs(q = searchText.value.toString())
+                service.getArtIDs(q = searchText.value)
             }
 
             if (response.objectIDs.isNullOrEmpty()) {
@@ -105,22 +126,6 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
         } else {
             mutableListOf()
         }
-    }
-
-
-    /**
-     * Updates the departmentId and departmentText LiveData objects.
-     */
-    fun updateDepartmentID() {
-        val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-        val newDep = pref.getInt("selectedDepartment", 0)
-        if (newDep != departmentId.value) {
-            _departmentId.value = newDep
-            getArts(true)
-        } else {
-            _departmentId.value = newDep
-        }
-        updateDepartmentName()
     }
 
 
@@ -140,8 +145,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
             if (_artsList.value == null || _artsList.value?.isEmpty() == true) {
 
                 _resultAmount.value = 0
-                if (_initialBatchLoaded.value != false) _initialBatchLoaded.value = false
-
+                if (_initialBatchLoaded.value) _initialBatchLoaded.value = false
 
                 for (i in 1..initialBatchSize.coerceAtMost(_foundIDs.value?.size?.minus(1) ?: 0)) {
                     addArtIfImagesAreFound()
@@ -170,9 +174,7 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      * Searches the API if the searchInput value is valid. searchInput must have at least a length of 2.
      */
     fun searchArtsWithInput() {
-        Log.d("searchText", searchText.value)
         if (searchText.value.isEmpty()) {
-            Log.i("SEARCH", "Empty searchText")
             return
         } else if (searchText.value.length < 2) {
             Toast.makeText(
@@ -188,45 +190,21 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
 
 
     /**
-     * Resets the selected department data from SharedPreferences. Furthermore, updates the LiveData objects regarding the department info.
-     */
-    fun resetSelectedDepartment() {
-        val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-        val editor = pref.edit()
-        editor.putInt("selectedDepartment", 0)
-        editor.putInt("selectedDepartmentRadioButton", 0)
-        editor.putString("selectedDepartmentName", "")
-        editor.apply()
-        updateDepartmentID()
-        getArts(true)
-    }
-
-
-    /**
      * Updates the resultText which displays the amount of found artworks from the API.
      */
-    fun updateResultText() {
+    private fun updateResultText() {
 
         val r = resultAmount.value
 
         if (r == 1) {
-            _resultText.value = "$r ${context.getString(R.string.result)}"
-        } else if (r != null) {
+            _resultText.value = "$r $result"
+        } else {
             if (r > 1) {
-                _resultText.value = "$r ${context.getString(R.string.results)}"
+                _resultText.value = "$r $results"
             } else {
-                _resultText.value = context.getString(R.string.no_result)
+                _resultText.value = noResults
             }
         }
-    }
-
-
-    /**
-     * Updates the departmentText LiveData object.
-     */
-    private fun updateDepartmentName() {
-        val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-        _departmentText.value = pref.getString("selectedDepartmentName", "")
     }
 
 
