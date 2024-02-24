@@ -1,6 +1,5 @@
 package com.marsu.armuseumproject.ui_components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,14 +31,13 @@ import com.marsu.armuseumproject.database.PreferencesManager
 
 @Composable
 fun SelectDepartmentPopup(onDismiss: () -> Unit) {
-    // TODO: Add all the elements and functionality
     val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
 
     val options = Datasource().loadDepartments()
     var optionInPrefs by remember { mutableStateOf<Department?>(null) }
     var (selectedOption, onOptionSelected) = remember { mutableStateOf<Department?>(null) }
-    Log.d("selectedOption", selectedOption.toString())
 
+    // Handle auto-selection
     if (selectedOption == null) {
         val id = preferencesManager.getData("selectedDepartment", null)
         val stringId = preferencesManager.getData("selectedDepartmentName", null)
@@ -51,86 +49,73 @@ fun SelectDepartmentPopup(onDismiss: () -> Unit) {
     }
 
     fun addToSharedPrefs(department: Department) {
-        Log.d("PREFS", department.toString())
         preferencesManager.saveData("selectedDepartment", department.id.toString())
         preferencesManager.saveData(
-            "selectedDepartmentName",
-            department.stringResourceId.toString()
+            "selectedDepartmentName", department.stringResourceId.toString()
         )
     }
 
-    Dialog(
-        content = {
-            Card(
-                colors = CardColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.onBackground,
-                    disabledContentColor = MaterialTheme.colorScheme.error,
-                    disabledContainerColor = MaterialTheme.colorScheme.error
-                ),
+    Dialog(content = {
+        Card(
+            colors = CardColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.onBackground,
+                disabledContentColor = MaterialTheme.colorScheme.error,
+                disabledContainerColor = MaterialTheme.colorScheme.error
+            ), modifier = Modifier.fillMaxHeight(0.80f), shape = MaterialTheme.shapes.large
+        ) {
+            LazyColumn(
                 modifier = Modifier
-                    //.fillMaxWidth(0.99f)
-                    .fillMaxHeight(0.80f),
-                shape = MaterialTheme.shapes.large
+                    .selectableGroup()
+                    .weight(0.94f)
             ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .selectableGroup()
-                        .weight(0.94f)
-                ) {
-                    itemsIndexed(options) { _, option ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .selectable(
-                                    selected = (option == selectedOption),
-                                    onClick = { onOptionSelected(option) },
-                                    role = Role.RadioButton
-                                ),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
+                itemsIndexed(options) { _, option ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
                                 selected = (option == selectedOption),
-                                onClick = { onOptionSelected(option) })
-                            Text(text = stringResource(id = option.stringResourceId))
-                        }
-                        //DepartmentItem(department = option)
+                                onClick = { onOptionSelected(option) },
+                                role = Role.RadioButton
+                            ), verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(selected = (option == selectedOption),
+                            onClick = { onOptionSelected(option) })
+                        Text(text = stringResource(id = option.stringResourceId))
                     }
                 }
+            }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(0.06f),
-                    verticalAlignment = Alignment.Bottom
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.06f),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Button(
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    onClick = { onOptionSelected(null) },
+                    shape = MaterialTheme.shapes.extraSmall
                 ) {
-                    Button(
-                        modifier = Modifier.fillMaxWidth(0.5f),
-                        onClick = { onOptionSelected(null) },
-                        shape = MaterialTheme.shapes.extraSmall
-                    ) {
-                        Text(text = stringResource(id = R.string.reset))
-                    }
-                    Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-                            if (selectedOption !== null && optionInPrefs !== selectedOption) {
-                                addToSharedPrefs(selectedOption)
-                            }
-                            onDismiss()
-                        },
-                        shape = MaterialTheme.shapes.extraSmall
-                    ) {
-                        Text(text = stringResource(id = R.string.back))
-                    }
+                    Text(text = stringResource(id = R.string.reset))
+                }
+                Button(
+                    modifier = Modifier.fillMaxWidth(), onClick = {
+                        if (selectedOption !== null && optionInPrefs !== selectedOption) {
+                            addToSharedPrefs(selectedOption)
+                        }
+                        onDismiss()
+                    }, shape = MaterialTheme.shapes.extraSmall
+                ) {
+                    Text(text = stringResource(id = R.string.back))
                 }
             }
-        },
-        onDismissRequest = {
-            if (selectedOption !== null && optionInPrefs !== selectedOption) {
-                addToSharedPrefs(selectedOption)
-            }
-            onDismiss()
-        })
+        }
+    }, onDismissRequest = {
+        if (selectedOption !== null && optionInPrefs !== selectedOption) {
+            addToSharedPrefs(selectedOption)
+        }
+        onDismiss()
+    })
 }
 

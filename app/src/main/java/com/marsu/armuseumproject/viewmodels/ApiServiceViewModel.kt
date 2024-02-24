@@ -1,7 +1,6 @@
 package com.marsu.armuseumproject.viewmodels
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -21,22 +20,15 @@ import retrofit2.HttpException
 /**
  * ViewModel class for ApiServiceFragment. Contains the data displayed within the Fragment.
  */
+// TODO: Reorganize contents. At least to search related stuff and popup related stuff.
 class ApiServiceViewModel(val context: Context) : ViewModel() {
 
     private val initialBatchSize = 15
     private val service = APIService.service
 
-    private val _departmentText = MutableLiveData("")
-    val departmentText: LiveData<String>
-        get() = _departmentText
-
     private val _resultText = MutableLiveData("")
     val resultText: LiveData<String>
         get() = _resultText
-
-    private val _departmentId = MutableLiveData(0)
-    val departmentId: LiveData<Int>
-        get() = _departmentId
 
     private val _foundIDs = MutableLiveData<MutableList<Int>>()
 
@@ -61,24 +53,22 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
     /**
      * Testing stuff here
      */
+
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
+
     private var _isArtPopupOpen = MutableStateFlow(false)
     var isArtPopupOpen = _isArtPopupOpen.asStateFlow()
 
     private var _isDepartmentPopupOpen = MutableStateFlow(false)
     var isDepartmentPopupOpen = _isDepartmentPopupOpen.asStateFlow()
 
-    private var _testing = MutableStateFlow("")
-    var testing = _testing.asStateFlow()
+    private var _departmentID = MutableStateFlow(0)
+    var departmentID = _departmentID.asStateFlow()
 
-    private var _dood = MutableStateFlow(0)
-    var dood = _dood.asStateFlow()
+    private var _departmentName = MutableStateFlow("")
+    var departmentName = _departmentName.asStateFlow()
 
-    private var _body = MutableStateFlow("")
-    var body = _body.asStateFlow()
-
-    fun testOne() {
-
-    }
     fun onArtItemClick() {
         _isArtPopupOpen.value = true
     }
@@ -92,9 +82,6 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
         _isDepartmentPopupOpen.value = false
     }
 
-    private val _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()
-
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
@@ -105,11 +92,9 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
     private suspend fun getArtIDs(): MutableList<Int> {
         return if (searchText.value.isNotEmpty()) {
 
-            val response = if (_dood.value != 0) {
-                Log.d("_HAISTA", _dood.value.toString())
-                Log.d("HAISTA", dood.value.toString())
+            val response = if (_departmentID.value != 0) {
                 service.getArtIDs(
-                    q = searchText.value.toString(), departmentId = _dood.value ?: 0
+                    q = searchText.value.toString(), departmentId = _departmentID.value
                 )
             } else {
                 service.getArtIDs(q = searchText.value.toString())
@@ -126,45 +111,22 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
         } else {
             mutableListOf()
         }
-
-        /*return if (searchText.value.isNotEmpty()) {
-
-            val response = if (departmentId.value != 0) {
-                service.getArtIDs(
-                    q = searchText.value.toString(), departmentId = departmentId.value ?: 0
-                )
-            } else {
-                service.getArtIDs(q = searchText.value.toString())
-            }
-
-            if (response.objectIDs.isNullOrEmpty()) {
-                Log.d("getArtIDs", "No objectIDs found")
-            } else {
-                Log.d("getArtIDs", "Found ${response.objectIDs.size} ids")
-            }
-
-            response.objectIDs
-
-        } else {
-            mutableListOf()
-        }*/
     }
 
 
     /**
-     * Updates the departmentId and departmentText LiveData objects.
+     * Updates the departmentId StateFlow.
      */
     fun updateDepartmentID(id: Int) {
-        /*val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-        val newDep = pref.getInt("selectedDepartment", 0)
-        if (newDep != departmentId.value) {
-            _departmentId.value = newDep
-            getArts(true)
-        } else {
-            _departmentId.value = newDep
-        }
-        updateDepartmentName()*/
-        _dood.value = id
+        _departmentID.value = id
+    }
+
+
+    /**
+     * Updates the departmentName StateFlow.
+     */
+    fun updateDepartmentName(name: String) {
+        _departmentName.value = name
     }
 
 
@@ -215,7 +177,6 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
      */
     fun searchArtsWithInput() {
         if (searchText.value.isEmpty()) {
-            Log.i("SEARCH", "Empty searchText")
             return
         } else if (searchText.value.length < 2) {
             Toast.makeText(
@@ -227,24 +188,15 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
         }
         _artsList.value = mutableListOf()
         getArts(true)
-        Log.d("searchText", searchText.value)
     }
 
 
     /**
-     * Resets the selected department data from SharedPreferences. Furthermore, updates the LiveData objects regarding the department info.
+     * Resets the selected department info StateFlows.
      */
     fun resetSelectedDepartment() {
-        /*val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-        val editor = pref.edit()
-        editor.putInt("selectedDepartment", 0)
-        editor.putInt("selectedDepartmentRadioButton", 0)
-        editor.putString("selectedDepartmentName", "")
-        editor.apply()
-        //updateDepartmentID()
-        getArts(true)*/
-        _dood.value = 0
-        _body.value = ""
+        _departmentID.value = 0
+        _departmentName.value = ""
     }
 
 
@@ -264,16 +216,6 @@ class ApiServiceViewModel(val context: Context) : ViewModel() {
                 _resultText.value = context.getString(R.string.no_result)
             }
         }
-    }
-
-
-    /**
-     * Updates the departmentText LiveData object.
-     */
-    fun updateDepartmentName(name: String) {
-        /*val pref: SharedPreferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-        _departmentText.value = pref.getString("selectedDepartmentName", "")*/
-        _body.value = name
     }
 
 

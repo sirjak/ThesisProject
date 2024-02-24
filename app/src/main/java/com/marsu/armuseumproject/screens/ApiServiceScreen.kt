@@ -2,7 +2,6 @@ package com.marsu.armuseumproject.screens
 
 import android.app.Application
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -90,7 +89,6 @@ class ApiServiceScreen : ComponentActivity() {
     }
 }
 
-// TODO: Launch filtered search along with rendering Chip
 @Composable
 fun ApiServiceScreen(
     viewModel: ApiServiceViewModel
@@ -110,20 +108,15 @@ fun ApiServiceScreen(
     val showInfo by viewModel.isArtPopupOpen.collectAsState()
     var singleArtwork by remember { mutableStateOf<Artwork?>(null) }
 
-    // Variabled associated with SelectDepartmentPopup
+    // Variables associated with SelectDepartmentPopup
     val showDepartments by viewModel.isDepartmentPopupOpen.collectAsState()
-    val departmentId by viewModel.dood.collectAsState()
-    val departmentName by viewModel.body.collectAsState()
-    //var selectedDepartmentId by remember { mutableStateOf<Int?>(null) }
-    //Log.d("selectedDepartmentId", selectedDepartmentId.toString())
-    Log.d("Levi", departmentId.toString())
+    val departmentId by viewModel.departmentID.collectAsState()
+    val departmentName by viewModel.departmentName.collectAsState()
 
+    // Retrieve department selection information from shared preferences
     if (!showDepartments) {
-        Log.d("IF", "In the if statement for SelectDepartmentPopup not showing")
         val nameId = preferencesManager.getData("selectedDepartmentName", "")
         val id = preferencesManager.getData("selectedDepartment", "")
-        Log.d("IF departmentNameId result", nameId.toString())
-        Log.d("IF departmentId result", id.toString())
 
         if (nameId !== null && nameId !== "" && id !== null && id !== "") {
             if (departmentId == 0 || departmentId != id.toInt()) {
@@ -159,16 +152,14 @@ fun ApiServiceScreen(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            OutlinedTextField(
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.background,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.background,
-                    focusedTextColor = MaterialTheme.colorScheme.primary,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
-                    unfocusedTextColor = MaterialTheme.colorScheme.primary
-                ),
+            OutlinedTextField(colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.background,
+                focusedIndicatorColor = MaterialTheme.colorScheme.background,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary
+            ),
                 keyboardActions = KeyboardActions(onDone = {
                     launchSearch()
                 }),
@@ -203,8 +194,7 @@ fun ApiServiceScreen(
                 onValueChange = viewModel::onSearchTextChange
             )
 
-            TextButton(
-                modifier = Modifier.padding(end = 10.dp),
+            TextButton(modifier = Modifier.padding(end = 10.dp),
                 onClick = { viewModel.onFilterButtonClick() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_filter_alt_24),
@@ -212,8 +202,8 @@ fun ApiServiceScreen(
                 )
                 Text(text = stringResource(id = R.string.filter))
             }
-
         }
+
         // Filter tag
         if (departmentId != 0) {
             Column(
@@ -223,31 +213,27 @@ fun ApiServiceScreen(
                     .fillMaxWidth()
                     .padding(start = 10.dp, bottom = 10.dp)
             ) {
-                OutlinedTextField(
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.colorScheme.primary,
-                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                        focusedTextColor = MaterialTheme.colorScheme.onPrimary,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.primary,
-                        unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                        unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
-                    ),
+                OutlinedTextField(colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.primary,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
+                ),
                     leadingIcon = {
-                        IconButton(
-                            content = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_baseline_close_24),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onBackground
-                                )
-                            },
-                            onClick = {
-                                preferencesManager.saveData("selectedDepartment", "")
-                                preferencesManager.saveData("selectedDepartmentName", "")
-                                viewModel.resetSelectedDepartment()
-                                launchSearch()
-                            }
-                        )
+                        IconButton(content = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_baseline_close_24),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }, onClick = {
+                            preferencesManager.saveData("selectedDepartment", "")
+                            preferencesManager.saveData("selectedDepartmentName", "")
+                            viewModel.resetSelectedDepartment()
+                            launchSearch()
+                        })
                     },
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
