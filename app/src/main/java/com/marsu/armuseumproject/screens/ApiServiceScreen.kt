@@ -97,12 +97,12 @@ fun ApiServiceScreen(
     val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
 
     val searchText by viewModel.searchText.collectAsState()
-    val isLoading by viewModel.loadingResults.observeAsState()
-    val resultsText by viewModel.resultText.observeAsState()
+    val isLoading by viewModel.loadingResults.collectAsState()
+    val resultsText by viewModel.resultText.collectAsState()
     val noResultText = stringResource(id = R.string.no_result)
 
     val artworks by viewModel.artsList.observeAsState()
-    val initialBatch by viewModel.initialBatchLoaded.observeAsState()
+    val initialBatch by viewModel.initialBatchLoaded.collectAsState()
 
     // Variables associated with ArtPopup
     val showInfo by viewModel.isArtPopupOpen.collectAsState()
@@ -250,7 +250,7 @@ fun ApiServiceScreen(
          */
         HorizontalDivider(modifier = Modifier.shadow(1.dp))
 
-        if (isLoading == true && initialBatch == false) {
+        if (isLoading && !initialBatch) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .padding(all = 20.dp)
@@ -260,14 +260,12 @@ fun ApiServiceScreen(
                 trackColor = MaterialTheme.colorScheme.onPrimary
             )
         } else {
-            (if (resultsText !== "") resultsText else noResultText)?.let {
-                Text(
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(all = 10.dp),
-                    text = it,
-                    textAlign = TextAlign.Center
-                )
-            }
+            Text(
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(all = 10.dp),
+                text = (if (resultsText !== "") resultsText else noResultText),
+                textAlign = TextAlign.Center
+            )
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 if (!artworks.isNullOrEmpty()) {
@@ -283,7 +281,7 @@ fun ApiServiceScreen(
 
                         // Loading more items when getting closer to the bottom
                         if (index >= artworks!!.size - 3) {
-                            if ((viewModel.loadingResults.value == false)) {
+                            if ((!isLoading)) {
                                 viewModel.getArts(false)
                             }
                         }
