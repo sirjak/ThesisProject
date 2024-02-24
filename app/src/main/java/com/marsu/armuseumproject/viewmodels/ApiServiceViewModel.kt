@@ -147,7 +147,6 @@ class ApiServiceViewModel(application: Application) : ViewModel() {
                 _resultAmount.value = 0
                 if (_initialBatchLoaded.value) _initialBatchLoaded.value = false
 
-
                 for (i in 1..initialBatchSize.coerceAtMost(_foundIDs.value?.size?.minus(1) ?: 0)) {
                     addArtIfImagesAreFound()
                 }
