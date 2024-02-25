@@ -36,21 +36,6 @@
             android:exported="false"
             android:label="@string/title_activity_ar_selection_screen"
             android:theme="@style/Theme.ARMuseumProject" />
-        <activity
-            android:name=".activities.ArtInfoActivity"
-            android:exported="false"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.ARMuseumProject.PopupTheme" />
-        <activity
-            android:name=".activities.SelectDepartmentActivity"
-            android:exported="false"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.ARMuseumProject.PopupTheme" />
-        <activity
-            android:name=".activities.PopupActivity"
-            android:exported="false"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.ARMuseumProject.PopupTheme" />
 
         <meta-data
             android:name="com.google.ar.core"

@@ -58,4 +58,5 @@
     <string name="title">Title *</string>
     <string name="title_activity_ar_selection_screen">ArSelectionScreen</string>
     <string name="welcome">Welcome!</string>
+    <string name="title_activity_ar_screen">ArScreen</string>
 </resources>
