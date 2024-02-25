@@ -1,7 +1,6 @@
 package com.marsu.armuseumproject.screens
 
 import android.app.Application
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -36,7 +35,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
-import com.marsu.armuseumproject.activities.ArActivity
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.fragments.SHARED_KEY
@@ -168,7 +166,7 @@ fun ArSelectionScreen(
                     addToList(id)
                     addToSharedPrefs()
                 }
-                context.startActivity(Intent(context, ArActivity::class.java))
+                //context.startActivity(Intent(context, ArActivity::class.java))
             },
             modifier = Modifier.padding(all = 20.dp)
         ) {

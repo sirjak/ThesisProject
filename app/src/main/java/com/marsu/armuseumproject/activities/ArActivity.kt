@@ -1,5 +1,5 @@
 package com.marsu.armuseumproject.activities
-
+/*
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -27,12 +27,14 @@ import com.marsu.armuseumproject.viewmodels.ArActivityViewModel
 const val MAX_IMAGE_HEIGHT = 300
 const val MAX_IMAGE_WIDTH = 300
 
+*/
 /**
  * Activity that handles the AR mode of the application. Receives an image URI as a navigation argument
  * that is then displayable on the screen at spots SceneForm deems applicable. Also contains usage
  * of gravity sensor to check whether the phone is held in an upright position, and disallows adding
  * an image if it is not.
- */
+ *//*
+
 class ArActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var arFrag: ArFragment
@@ -130,9 +132,11 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
-    /**
+    */
+/**
      *  Delete image currently placed on the screen
-     */
+     *//*
+
     private fun deleteImage() {
         if (arActivityViewModel.currentImageNode.value != null && intermediateNode != null) {
             intermediateNode!!.removeChild(arActivityViewModel.currentImageNode.value)
@@ -141,9 +145,11 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
-    /**
+    */
+/**
      * Register gravity sensor
-     */
+     *//*
+
     private fun registerSensor(sensorManager: SensorManager, sensor: Sensor?) {
         if (sensor != null) {
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
@@ -153,9 +159,11 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
-    /**
+    */
+/**
      * When gravity sensor detects change, send data to viewModel to calculate if phone is upright
-     */
+     *//*
+
     override fun onSensorChanged(p0: SensorEvent?) {
         Log.d("ON_SENSOR_CHANGED", p0?.values.contentToString())
         arActivityViewModel.calculateGravityData(
@@ -163,11 +171,13 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
         )
     }
 
-    /**
+    */
+/**
      * Mandatory override for SensorEventListener
-     */
+     *//*
+
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
         Log.d("ON_ACCURACY_CHANGED_SENSOR", p0.toString())
         Log.d("ON_ACCURACY_CHANGED_CHANGE", p1.toString())
     }
-}
+}*/

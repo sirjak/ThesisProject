@@ -37,9 +37,9 @@
             android:label="@string/title_activity_ar_selection_screen"
             android:theme="@style/Theme.ARMuseumProject" />
 
-        <meta-data
+        <!--<meta-data
             android:name="com.google.ar.core"
-            android:value="required" />
+            android:value="required" />-->
 
         <activity
             android:name=".activities.ArActivity"
