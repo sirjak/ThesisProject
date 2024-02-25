@@ -58,4 +58,5 @@
     <string name="title">Nimi *</string>
     <string name="title_activity_ar_selection_screen">ArValintaNäkymä</string>
     <string name="welcome">Tervetuloa!</string>
+    <string name="title_activity_ar_screen">ArNäkymä</string>
 </resources>

@@ -4,8 +4,7 @@
     <!-- Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <!-- Features -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- Features -->
     <uses-feature
         android:glEsVersion="0x00030000"
         android:required="true" />
@@ -27,6 +26,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ARMuseumProject"
         tools:targetApi="31">
+        <activity
+            android:name=".screens.ArScreen"
+            android:exported="false"
+            android:label="@string/title_activity_ar_screen"
+            android:theme="@style/Theme.ARMuseumProject" />
         <activity
             android:name=".screens.ArSelectionScreen"
             android:exported="false"

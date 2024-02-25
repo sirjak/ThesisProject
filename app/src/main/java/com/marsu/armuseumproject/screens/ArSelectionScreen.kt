@@ -161,14 +161,16 @@ fun ArSelectionScreen(
         Text(text = chosenTitle)
         Text(text = chosenArtist)
         Button(
-            enabled = isSelected, onClick = {
+            enabled = isSelected,
+            onClick = {
                 val id = viewModel.imageId.value
                 if (id !== null) {
                     addToList(id)
                     addToSharedPrefs()
                 }
                 context.startActivity(Intent(context, ArActivity::class.java))
-            }, modifier = Modifier.padding(all = 20.dp)
+            },
+            modifier = Modifier.padding(all = 20.dp)
         ) {
             Text(text = stringResource(id = R.string.start_ar))
         }
