@@ -4,7 +4,7 @@
     <string name="ar" translatable="false">AR</string>
     <string name="ar_selection">AR Selection</string>
     <string name="artist">Artist</string>
-    <string name="back">Back</string>
+    <string name="back">BACK</string>
     <string name="chosen_artwork">Chosen artwork:</string>
     <string name="classification">Classification</string>
     <string name="delete_current">Delete current artwork</string>
@@ -43,10 +43,10 @@
     <string name="open_selectFromGallery">Open SFG</string>
     <string name="pickImageToast">You have to pick image from gallery before saving it</string>
     <string name="phone_rotation_warning">Please hold your phone upright!</string>
-    <string name="reset">Reset</string>
+    <string name="reset">RESET</string>
     <string name="result">result</string>
     <string name="results">results</string>
-    <string name="save_image">Save image</string>
+    <string name="save_image">SAVE IMAGE</string>
     <string name="saveButton">Save</string>
     <string name="saved">Image saved</string>
     <string name="search">Search</string>

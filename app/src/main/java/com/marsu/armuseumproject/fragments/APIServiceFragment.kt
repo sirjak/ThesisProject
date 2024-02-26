@@ -1,7 +1,6 @@
 package com.marsu.armuseumproject.fragments
 
 import android.os.Bundle
-import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,6 @@ import com.marsu.armuseumproject.viewmodels.ApiServiceViewModel
 class APIServiceFragment : Fragment() {
 
     private lateinit var viewmodel: ApiServiceViewModel
-    private var lastDepClick = 0L
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,50 +50,14 @@ class APIServiceFragment : Fragment() {
                 }
             }
         }
-        // Recyclerview setup
-        /*adapter = ApiServiceAdapter()
-        adapter.setHasStableIds(true)
-        layoutManager = LinearLayoutManager(activity)
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.setHasFixedSize(true)
-        binding.recyclerView.layoutManager = layoutManager*/
-
-        // Department settings
-        /*binding.openDepartmentSettings.setOnClickListener {
-            preventButtonClickSpam {
-                val intent = Intent(activity, SelectDepartmentActivity::class.java)
-                startActivity(intent)
-            }
-        }*/
-
-        // Clear button for department
-        /*binding.resetDepartment.setOnClickListener {
-            apiServiceViewModel.resetSelectedDepartment()
-        }*/
-
-        /*apiServiceViewModel.departmentId.observe(viewLifecycleOwner) {
-            it.let {
-                if (it == 0) {
-                    binding.departmentIndicator.visibility = View.GONE
-                } else {
-                    binding.departmentIndicator.visibility = View.VISIBLE
-                }
-            }
-        }*/
-
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        //apiServiceViewModel.updateDepartmentID()
-    }
-
-    private fun preventButtonClickSpam(f: () -> Unit) {
+    // TODO: Figure out if needed
+    /*private fun preventButtonClickSpam(f: () -> Unit) {
         if (SystemClock.elapsedRealtime() - lastDepClick > 1000) {
             lastDepClick = SystemClock.elapsedRealtime()
             f()
         }
-    }
+    }*/
 }
