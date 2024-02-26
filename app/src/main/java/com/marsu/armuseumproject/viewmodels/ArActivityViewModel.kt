@@ -2,13 +2,14 @@ package com.marsu.armuseumproject.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import io.github.sceneview.node.Node
 
 /**
  * ViewModel for the AR Activity, keeps track of the current image node used by SceneForm and calculates
  * whether the phone is upright with the gravity sensor data
  */
 class ArActivityViewModel(application: Application) : ArSelectionViewModel(application) {
-    //val currentImageNode = MutableLiveData<Node>(null)
+    val currentImageNode = MutableLiveData<Node>(null)
     val isPhoneUpright = MutableLiveData(false)
 
     // Calculate if phone is upright
