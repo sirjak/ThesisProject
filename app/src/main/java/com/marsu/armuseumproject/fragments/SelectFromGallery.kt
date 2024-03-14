@@ -95,11 +95,11 @@ fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lif
     /**
      * Open selection from gallery and set selected image to imageUri
      */
-    val openGallery = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = {
-            if (it !== null) imageUri = it
-        })
+    val openGallery =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = {
+                if (it !== null) imageUri = it
+            })
 
     fun insertToDatabase(
         viewModel: SelectFromGalleryViewModel,
