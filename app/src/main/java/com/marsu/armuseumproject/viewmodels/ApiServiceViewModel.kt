@@ -21,7 +21,6 @@ import retrofit2.HttpException
  * ViewModel class for ApiServiceFragment. Contains the data displayed within the Fragment.
  */
 class ApiServiceViewModel(application: Application) : ViewModel() {
-
     private val service = APIService.service
     private val initialBatchSize = 15
     private val paginationAmount = 10
@@ -34,7 +33,6 @@ class ApiServiceViewModel(application: Application) : ViewModel() {
     private val _artsList = MutableLiveData(listOf<Artwork>())
     val artsList: LiveData<List<Artwork>>
         get() = _artsList
-
 
     /**
      * MutableStateFlow variables
@@ -65,7 +63,6 @@ class ApiServiceViewModel(application: Application) : ViewModel() {
 
     private val _isDepartmentPopupOpen = MutableStateFlow(false)
     var isDepartmentPopupOpen = _isDepartmentPopupOpen.asStateFlow()
-
 
     /**
      * Functions to handle MutableStateFlow variable mutations.
@@ -100,7 +97,6 @@ class ApiServiceViewModel(application: Application) : ViewModel() {
         _departmentName.value = name
     }
 
-
     /**
      * Get Art ids and store them for later usage.
      */
@@ -128,14 +124,11 @@ class ApiServiceViewModel(application: Application) : ViewModel() {
         }
     }
 
-
     /**
      * Fetch art data according to the stored IDs.
      */
     fun getArts(refresh: Boolean = false) {
-
         CoroutineScope(Dispatchers.Main).launch {
-
             if (_foundIDs.value == null || refresh) {
                 _foundIDs.value = getArtIDs()
                 _artsList.value = emptyList()
@@ -153,7 +146,6 @@ class ApiServiceViewModel(application: Application) : ViewModel() {
                 _resultAmount.value = _foundIDs.value?.size ?: 0
 
             } else {
-
                 for (i in 1..paginationAmount) {
                     if ((_artsList.value?.size ?: 0) >= (_foundIDs.value?.size ?: 0)) break
                     addArtIfImagesAreFound()
@@ -188,7 +180,6 @@ class ApiServiceViewModel(application: Application) : ViewModel() {
         getArts(true)
     }
 
-
     /**
      * Updates the resultText which displays the amount of found artworks from the API.
      */
@@ -207,13 +198,11 @@ class ApiServiceViewModel(application: Application) : ViewModel() {
         }
     }
 
-
     /**
      * Adds the found art to the list if it contains the required primary images. If it lacks images, the ID is removed from the list.
      * @return the success status if the Artwork was added.
      */
     private suspend fun addArtIfImagesAreFound(): Boolean {
-
         if ((_artsList.value?.size ?: 0) >= (_foundIDs.value?.size ?: 0)) return false
 
         val objectID = _foundIDs.value?.get(
@@ -221,9 +210,7 @@ class ApiServiceViewModel(application: Application) : ViewModel() {
         ) ?: 0
 
         try {
-
             val art = service.getObjectByID(objectID)
-
             if (isValidArt(art)) {
                 _artsList.value = _artsList.value.orEmpty() + art
                 return true
@@ -242,7 +229,6 @@ class ApiServiceViewModel(application: Application) : ViewModel() {
         }
         return false
     }
-
 
     /**
      * Checks if the Artwork object is usable in the application.

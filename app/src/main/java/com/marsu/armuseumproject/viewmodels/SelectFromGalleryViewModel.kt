@@ -7,7 +7,6 @@ import com.marsu.armuseumproject.service.InternalStorageService
 import kotlinx.coroutines.launch
 
 open class SelectFromGalleryViewModel : ViewModel() {
-
     fun insertImage(artwork: Artwork) {
         viewModelScope.launch { InternalStorageService.insertImage(artwork) }
     }

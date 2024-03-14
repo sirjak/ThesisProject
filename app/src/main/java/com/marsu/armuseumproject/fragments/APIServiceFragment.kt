@@ -26,15 +26,11 @@ class APIServiceFragment : Fragment() {
     private lateinit var viewmodel: ApiServiceViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         viewmodel = ApiServiceViewModel(requireActivity().application)
         val binding = DataBindingUtil.inflate<FragmentApiServiceBinding>(
-            inflater,
-            R.layout.fragment_api_service,
-            container,
-            false
+            inflater, R.layout.fragment_api_service, container, false
         ).apply {
             composeView.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)

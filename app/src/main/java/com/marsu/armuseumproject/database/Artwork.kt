@@ -11,8 +11,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "art_table")
 data class Artwork(
-    @PrimaryKey(autoGenerate = false)
-    val objectID: Int,
+    @PrimaryKey(autoGenerate = false) val objectID: Int,
     var primaryImage: String,
     var primaryImageSmall: String,
     val department: String,

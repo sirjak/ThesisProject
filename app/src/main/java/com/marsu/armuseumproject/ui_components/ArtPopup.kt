@@ -37,75 +37,69 @@ fun ArtPopup(
 ) {
     val imageUri = art.primaryImage.toUri()
 
-    Dialog(
-        content = {
-            Card(
-                colors = CardColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                    disabledContainerColor = MaterialTheme.colorScheme.secondary,
-                    disabledContentColor = MaterialTheme.colorScheme.tertiary
-                ),
-                modifier = Modifier
-                    .fillMaxWidth(0.90f)
-                    .fillMaxHeight(0.80f),
-                shape = MaterialTheme.shapes.medium
+    Dialog(content = {
+        Card(
+            colors = CardColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = MaterialTheme.colorScheme.primary,
+                disabledContainerColor = MaterialTheme.colorScheme.secondary,
+                disabledContentColor = MaterialTheme.colorScheme.tertiary
+            ),
+            modifier = Modifier
+                .fillMaxWidth(0.90f)
+                .fillMaxHeight(0.80f),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize()
+                Image(
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.50f),
+                    painter = rememberAsyncImagePainter(imageUri),
+                    contentDescription = null
+                )
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .offset(y = (-4).dp),
+                    onClick = { viewModel.insertImage(art) },
+                    shape = MaterialTheme.shapes.extraSmall
                 ) {
-                    Image(
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.50f),
-                        painter = rememberAsyncImagePainter(imageUri),
-                        contentDescription = null
+                    Text(text = stringResource(id = R.string.save_image))
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxHeight(0.83f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(fontWeight = FontWeight.Bold, text = art.title)
+                    HorizontalDivider(
+                        modifier = Modifier.padding(
+                            horizontal = 32.dp, vertical = 16.dp
+                        )
                     )
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset(y = (-4).dp),
-                        onClick = { viewModel.insertImage(art) },
-                        shape = MaterialTheme.shapes.extraSmall
-                    ) {
-                        Text(text = stringResource(id = R.string.save_image))
-                    }
+                    Text(
+                        fontWeight = FontWeight.Bold, text = art.artistDisplayName
+                    )
 
-                    Column(
-                        modifier = Modifier.fillMaxHeight(0.83f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(fontWeight = FontWeight.Bold, text = art.title)
-                        HorizontalDivider(
-                            modifier = Modifier.padding(
-                                horizontal = 32.dp,
-                                vertical = 16.dp
-                            )
-                        )
-                        Text(
-                            fontWeight = FontWeight.Bold,
-                            text = art.artistDisplayName
-                        )
-
-                    }
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f, true),
-                        onClick = { onDismiss() },
-                        shape = MaterialTheme.shapes.extraSmall
-                    ) {
-                        Text(text = stringResource(id = R.string.back))
-                    }
+                }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f, true),
+                    onClick = { onDismiss() },
+                    shape = MaterialTheme.shapes.extraSmall
+                ) {
+                    Text(text = stringResource(id = R.string.back))
                 }
             }
-        },
-        onDismissRequest = {
-            onDismiss()
-        },
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        }
+    }, onDismissRequest = {
+        onDismiss()
+    }, properties = DialogProperties(usePlatformDefaultWidth = false)
     )
-
 }

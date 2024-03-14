@@ -19,8 +19,7 @@ abstract class ArtDB : RoomDatabase() {
         fun get(context: Context): ArtDB {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(
-                    context.applicationContext,
-                    ArtDB::class.java, "artdb"
+                    context.applicationContext, ArtDB::class.java, "artdb"
                 ).fallbackToDestructiveMigration().build()
             }
             return INSTANCE!!
