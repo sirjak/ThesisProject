@@ -56,6 +56,6 @@
     <string name="select_photo">Valitse kuva...</string>
     <string name="start_ar">Aloita AR</string>
     <string name="title">Nimi *</string>
-    <string name="title_activity_ar_selection_screen">ArValintaNäkymä</string>
     <string name="welcome">Tervetuloa!</string>
+    <string name="contentDescriptionSaveFromGallery">Kuva kamerasta, jonka yläkulmassa plus-merkki. Kuvan painallus avaa puhelimen gallerian kuvan valintaa varten.</string>
 </resources>

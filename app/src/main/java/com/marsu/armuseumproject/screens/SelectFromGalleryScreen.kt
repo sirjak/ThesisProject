@@ -87,7 +87,7 @@ fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lif
         IconButton(content = {
             Image(
                 painter = if (imageUri != null) rememberAsyncImagePainter(imageUri) else defaultImage,
-                contentDescription = null,
+                contentDescription = stringResource(id = R.string.contentDescriptionSaveFromGallery),
                 modifier = Modifier.fillMaxSize()
             )
         }, modifier = Modifier
