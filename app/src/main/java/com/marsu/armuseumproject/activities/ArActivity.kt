@@ -21,11 +21,10 @@ import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 import com.marsu.armuseumproject.R
+import com.marsu.armuseumproject.database.MAX_IMAGE_HEIGHT
+import com.marsu.armuseumproject.database.MAX_IMAGE_WIDTH
 import com.marsu.armuseumproject.databinding.ActivityArBinding
 import com.marsu.armuseumproject.viewmodels.ArActivityViewModel
-
-const val MAX_IMAGE_HEIGHT = 300
-const val MAX_IMAGE_WIDTH = 300
 
 /**
  * Activity that handles the AR mode of the application. Receives an image URI as a navigation argument

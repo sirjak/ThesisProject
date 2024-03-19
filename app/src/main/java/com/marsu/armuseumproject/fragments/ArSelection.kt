@@ -17,13 +17,12 @@ import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.PreferencesManager
+import com.marsu.armuseumproject.database.SHARED_KEY
 import com.marsu.armuseumproject.databinding.FragmentArSelectionBinding
 import com.marsu.armuseumproject.screens.ArSelectionScreen
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
 import java.lang.reflect.Type
-
-const val SHARED_KEY = "LAST_FIVE"
 
 /**
  * Fragment for selecting artwork to be displayed in AR mode. Displays all the artwork saved to the Room database
