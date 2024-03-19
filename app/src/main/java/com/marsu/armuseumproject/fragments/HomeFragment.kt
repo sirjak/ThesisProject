@@ -37,6 +37,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+
         // Retrieving the previously stored list of id's to use it as a base for lastFive
         val preferences = PreferencesManager(MyApp.appContext)
         val json = preferences.getData(SHARED_KEY, null)
@@ -65,9 +66,4 @@ class HomeFragment : Fragment() {
         }
         return binding.root
     }
-    // TODO: Figure out what this part does and if it should be kept
-    /*override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }*/
 }

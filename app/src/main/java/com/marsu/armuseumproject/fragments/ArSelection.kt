@@ -40,6 +40,7 @@ class ArSelection : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+
         // Retrieving the previously stored list of id's to use it as a base for lastFive
         val preferences = PreferencesManager(MyApp.appContext)
         val json = preferences.getData(SHARED_KEY, null)
@@ -67,7 +68,6 @@ class ArSelection : Fragment() {
                 }
             }
         }
-
         return binding.root
     }
 }

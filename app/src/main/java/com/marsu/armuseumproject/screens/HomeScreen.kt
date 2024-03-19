@@ -27,9 +27,6 @@ import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
 fun HomeScreen(
     lastFive: MutableList<Int>, onNavigate: (Int) -> Unit, viewModel: ArSelectionViewModel
 ) {
-    //val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
-    //val context = LocalContext.current
-
     val welcomeText = stringResource(id = R.string.welcome)
     val introText = stringResource(id = R.string.home_intro)
     val recentText = stringResource(id = R.string.home_recent)
