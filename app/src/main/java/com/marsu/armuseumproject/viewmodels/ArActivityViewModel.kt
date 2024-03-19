@@ -16,5 +16,4 @@ class ArActivityViewModel(application: Application) : ArSelectionViewModel(appli
     fun calculateGravityData(y: Float) {
         isPhoneUpright.value = y > 9.4 && y < 10
     }
-
 }

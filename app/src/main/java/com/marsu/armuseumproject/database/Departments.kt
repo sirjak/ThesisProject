@@ -4,8 +4,7 @@ import androidx.annotation.StringRes
 import com.marsu.armuseumproject.R
 
 data class Department(
-    @StringRes val stringResourceId: Int,
-    val id: Int
+    @StringRes val stringResourceId: Int, val id: Int
 )
 
 class Datasource {
