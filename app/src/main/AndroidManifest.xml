@@ -27,27 +27,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ARMuseumProject"
         tools:targetApi="31">
-        <activity
-            android:name=".screens.ArSelectionScreen"
-            android:exported="false"
-            android:label="@string/title_activity_ar_selection_screen"
-            android:theme="@style/Theme.ARMuseumProject" />
-        <activity
-            android:name=".activities.ArtInfoActivity"
-            android:exported="false"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.ARMuseumProject.PopupTheme" />
-        <activity
-            android:name=".activities.SelectDepartmentActivity"
-            android:exported="false"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.ARMuseumProject.PopupTheme" />
-        <activity
-            android:name=".activities.PopupActivity"
-            android:exported="false"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.ARMuseumProject.PopupTheme" />
-
         <meta-data
             android:name="com.google.ar.core"
             android:value="required" />
