@@ -17,6 +17,7 @@ import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.PreferencesManager
+import com.marsu.armuseumproject.database.SHARED_KEY
 import com.marsu.armuseumproject.databinding.FragmentHomeBinding
 import com.marsu.armuseumproject.screens.HomeScreen
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme

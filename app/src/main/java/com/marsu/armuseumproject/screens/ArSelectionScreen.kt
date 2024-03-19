@@ -31,7 +31,7 @@ import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.activities.ArActivity
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.database.PreferencesManager
-import com.marsu.armuseumproject.fragments.SHARED_KEY
+import com.marsu.armuseumproject.database.SHARED_KEY
 import com.marsu.armuseumproject.ui_components.ArtItem
 import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
 
