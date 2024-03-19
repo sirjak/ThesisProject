@@ -59,7 +59,7 @@ fun ArtPopup(
                         .fillMaxWidth()
                         .fillMaxHeight(0.50f),
                     painter = rememberAsyncImagePainter(imageUri),
-                    contentDescription = null
+                    contentDescription = stringResource(id = R.string.contentDescriptionListItem)
                 )
                 Button(
                     modifier = Modifier

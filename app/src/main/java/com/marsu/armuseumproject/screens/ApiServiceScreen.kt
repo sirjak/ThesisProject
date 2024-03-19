@@ -130,7 +130,7 @@ fun ApiServiceScreen(
                     IconButton(content = {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_baseline_search_32),
-                            contentDescription = null,
+                            contentDescription = stringResource(id = R.string.contentDescriptionApiSearch),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }, onClick = {
@@ -161,7 +161,7 @@ fun ApiServiceScreen(
                 onClick = { viewModel.onFilterButtonClick() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_filter_alt_24),
-                    contentDescription = null
+                    contentDescription = stringResource(id = R.string.contentDescriptionApiFilter)
                 )
                 Text(text = stringResource(id = R.string.filter))
             }
@@ -188,7 +188,7 @@ fun ApiServiceScreen(
                         IconButton(content = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_baseline_close_24),
-                                contentDescription = null,
+                                contentDescription = stringResource(id = R.string.contentDescriptionApiDismiss),
                                 tint = MaterialTheme.colorScheme.onBackground
                             )
                         }, onClick = {
