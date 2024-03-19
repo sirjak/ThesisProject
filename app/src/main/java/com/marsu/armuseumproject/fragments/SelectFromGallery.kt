@@ -26,8 +26,7 @@ class SelectFromGallery : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         viewmodel = SelectFromGalleryViewModel()
-        val binding = DataBindingUtil
-            .inflate<FragmentSelectFromGalleryBinding>(
+        val binding = DataBindingUtil.inflate<FragmentSelectFromGalleryBinding>(
                 inflater, R.layout.fragment_select_from_gallery, container, false
             ).apply {
                 composeView.apply {
