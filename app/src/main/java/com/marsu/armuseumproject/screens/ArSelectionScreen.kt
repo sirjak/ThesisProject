@@ -2,7 +2,6 @@ package com.marsu.armuseumproject.screens
 
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,11 +29,18 @@ import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.activities.ArActivity
 import com.marsu.armuseumproject.database.Artwork
+import com.marsu.armuseumproject.database.INTENT_EXTRA
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.database.SHARED_KEY
 import com.marsu.armuseumproject.ui_components.ArtItem
 import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
 
+/**
+ * Composable for selecting artwork to be displayed in AR mode. Displays all the artwork saved to the Room database
+ * in a LazyColumn. When an artwork has been selected, the 'Start AR' button can be used to navigate to the AR
+ * activity with the image uri coming along as intent extra. Also saves the artwork to the most recent
+ * artworks when navigating to AR mode.
+ */
 @Composable
 fun ArSelectionScreen(
     lastFive: MutableList<Int>, viewModel: ArSelectionViewModel
@@ -60,15 +66,18 @@ fun ArSelectionScreen(
         viewModel.saveId(null)
     }
 
-    // Handling preselection when navigated from HomeScreen by clicking an ArtItem
-    if (preselectId !== null) {
-        val art = viewModel.getArt(preselectId!!).observeAsState().value
-        art?.get(0)?.let { selectArt(it) }
-    }
-
     fun postValuesToViewModel(id: Int, uri: Uri) {
         viewModel.imageUri.postValue(uri)
         viewModel.imageId.postValue(id)
+    }
+
+    // Handling preselection when navigated from HomeScreen by clicking an ArtItem
+    if (preselectId !== null) {
+        val art = viewModel.getArt(preselectId!!).observeAsState().value
+        art?.get(0)?.let {
+            selectArt(it)
+            postValuesToViewModel(it.objectID, it.primaryImage.toUri())
+        }
     }
 
     // Saving latest watched artwork id into MutableList<Int>
@@ -126,7 +135,9 @@ fun ArSelectionScreen(
                     addToList(id)
                     addToSharedPrefs()
                 }
-                context.startActivity(Intent(context, ArActivity::class.java))
+                val intent = Intent(context, ArActivity::class.java)
+                intent.putExtra(INTENT_EXTRA, viewModel.imageUri.value.toString())
+                context.startActivity(Intent(intent))
             }, modifier = Modifier.padding(all = 20.dp)
         ) {
             Text(text = stringResource(id = R.string.start_ar))

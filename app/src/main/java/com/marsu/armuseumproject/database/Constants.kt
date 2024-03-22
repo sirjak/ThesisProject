@@ -1,5 +1,7 @@
 package com.marsu.armuseumproject.database
 
+// Intent extra key
+const val INTENT_EXTRA = "IMAGE_URI_AS_STRING"
 // Shared preferences keys
 const val SHARED_KEY = "LAST_FIVE"
 
