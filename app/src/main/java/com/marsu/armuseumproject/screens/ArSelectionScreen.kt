@@ -91,7 +91,6 @@ fun ArSelectionScreen(
     // Converts lastFive (list of Artwork id's) to a json and stores to shared preferences
     fun addToSharedPrefs() {
         val storedLastFive = Gson().toJson(lastFive)
-        Log.d("STORED", storedLastFive)
         preferencesManager.saveData(SHARED_KEY, storedLastFive)
     }
 
