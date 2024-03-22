@@ -25,10 +25,7 @@ import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
 import java.lang.reflect.Type
 
 /**
- * Fragment for selecting artwork to be displayed in AR mode. Displays all the artwork saved to the Room database
- * in a RecyclerView. When an artwork has been selected, the 'Start AR' button can be used to navigate to the AR
- * activity with the image uri coming along as a navigation argument. Also saves the artwork to the most recent
- * artworks when navigating to AR mode.
+ * Contains ArSelectionScreen composable.
  */
 
 class ArSelection : Fragment() {

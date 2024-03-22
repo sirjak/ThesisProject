@@ -11,7 +11,7 @@ import com.marsu.armuseumproject.service.InternalStorageService
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel for ArtInfoFragment. Provides functionality for adding API images to Room and internal storage.
+ * ViewModel for ArtPopup composable. Provides functionality for adding API images to Room and internal storage.
  */
 class ArtPopupViewModel : ViewModel() {
     private val saveSuccess = MutableLiveData(false)

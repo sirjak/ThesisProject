@@ -17,8 +17,7 @@ import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.viewmodels.SelectFromGalleryViewModel
 
 /**
- * Fragment for adding custom artwork to the application. Has two input fields for the title and author,
- * as well as a image input for the artwork itself. Artwork is saved to the Room database.
+ * Contains SelectFromGalleryScreen composable.
  */
 class SelectFromGallery : Fragment() {
     private lateinit var viewmodel: SelectFromGalleryViewModel

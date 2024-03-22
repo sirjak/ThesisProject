@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 /**
- * ViewModel class for ApiServiceFragment. Contains the data displayed within the Fragment.
+ * ViewModel class for ApiServiceScreen. Contains the data displayed within the screen.
  */
 class ApiServiceViewModel(application: Application) : ViewModel() {
     private val service = APIService.service

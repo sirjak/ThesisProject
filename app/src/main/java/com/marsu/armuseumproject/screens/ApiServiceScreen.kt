@@ -51,6 +51,10 @@ import com.marsu.armuseumproject.ui_components.ArtPopup
 import com.marsu.armuseumproject.ui_components.SelectDepartmentPopup
 import com.marsu.armuseumproject.viewmodels.ApiServiceViewModel
 
+/**
+ * Contains a search field and LazyColumn for fetching and displaying found artwork from the API,
+ * as well as a button for opening up the SelectDepartmentPopup for filtering the found Artwork objects.
+ */
 @Composable
 fun ApiServiceScreen(
     viewModel: ApiServiceViewModel

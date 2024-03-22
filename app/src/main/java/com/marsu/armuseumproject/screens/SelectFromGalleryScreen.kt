@@ -38,6 +38,10 @@ import com.marsu.armuseumproject.service.InternalStorageService
 import com.marsu.armuseumproject.viewmodels.SelectFromGalleryViewModel
 import java.util.UUID
 
+/**
+ * Composable for adding custom artwork to the application. Has two input fields for the title and author,
+ * as well as a image input for the artwork itself. Artwork is saved to the Room database.
+ */
 @Composable
 fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     val focusManager = LocalFocusManager.current
@@ -49,9 +53,7 @@ fun SelectFromGalleryScreen(viewModel: SelectFromGalleryViewModel = androidx.lif
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val toastText = stringResource(id = R.string.pickImageToast)
 
-    /**
-     * Open selection from gallery and set selected image to imageUri
-     */
+    // Open selection from gallery and set selected image to imageUri
     val openGallery =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia(),
             onResult = { if (it !== null) imageUri = it })

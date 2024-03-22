@@ -23,6 +23,12 @@ import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.ui_components.ArtItem
 import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
 
+/**
+ * Contains Column with 2 Text composables and a LazyColumn.
+ * Text composables display a welcome and when first used, short instructions to using the app.
+ * After user has tried some artworks on AR, the instructions change to describing below elements to be recently viewed art.
+ * LazyColumn displays 5 artworks that have been tried out in AR most recently.
+ */
 @Composable
 fun HomeScreen(
     lastFive: MutableList<Int>, onNavigate: (Int) -> Unit, viewModel: ArSelectionViewModel

@@ -18,8 +18,7 @@ import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.viewmodels.ApiServiceViewModel
 
 /**
- * Contains an EditText and RecyclerView for fetching and displaying found artwork from the API, as well as a button for opening up
- * the SelectDepartmentActivity for filtering the found Artwork objects.
+ * Contains a ApiServiceScreen composable.
  */
 class APIServiceFragment : Fragment() {
 
