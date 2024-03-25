@@ -1,9 +1,5 @@
 package com.marsu.armuseumproject.screens
 
-import android.app.Application
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -24,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
@@ -47,48 +42,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.database.PreferencesManager
-import com.marsu.armuseumproject.fragments.SHARED_KEY
-import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.ui_components.ArtItem
 import com.marsu.armuseumproject.ui_components.ArtPopup
 import com.marsu.armuseumproject.ui_components.SelectDepartmentPopup
 import com.marsu.armuseumproject.viewmodels.ApiServiceViewModel
-import java.lang.reflect.Type
 
-class ApiServiceScreen : ComponentActivity() {
-    private lateinit var viewModel: ApiServiceViewModel
-    private var lastFive = mutableListOf<Int>() // initiate variable
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ApiServiceViewModel(Application())
-
-        // Retrieve lastFive from shared preferences and converting back to list from json
-        val preferences = PreferencesManager(MyApp.appContext)
-        val json = preferences.getData(SHARED_KEY, null)
-        val type: Type = object : TypeToken<List<Int>>() {}.type
-        if (json != null) {
-            lastFive = Gson().fromJson(json, type)
-        }
-
-        setContent {
-            ARMuseumProjectTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    ApiServiceScreen(viewModel)
-                }
-            }
-        }
-    }
-}
-
+/**
+ * Contains a search field and LazyColumn for fetching and displaying found artwork from the API,
+ * as well as a button for opening up the SelectDepartmentPopup for filtering the found Artwork objects.
+ */
 @Composable
 fun ApiServiceScreen(
     viewModel: ApiServiceViewModel
@@ -152,14 +118,15 @@ fun ApiServiceScreen(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            OutlinedTextField(colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.background,
-                focusedIndicatorColor = MaterialTheme.colorScheme.background,
-                focusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
-                unfocusedTextColor = MaterialTheme.colorScheme.primary
-            ),
+            OutlinedTextField(
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.background,
+                    focusedTextColor = MaterialTheme.colorScheme.primary,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+                    unfocusedTextColor = MaterialTheme.colorScheme.primary
+                ),
                 keyboardActions = KeyboardActions(onDone = {
                     launchSearch()
                 }),
@@ -167,7 +134,7 @@ fun ApiServiceScreen(
                     IconButton(content = {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_baseline_search_32),
-                            contentDescription = null,
+                            contentDescription = stringResource(id = R.string.contentDescriptionApiSearch),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }, onClick = {
@@ -198,7 +165,7 @@ fun ApiServiceScreen(
                 onClick = { viewModel.onFilterButtonClick() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_filter_alt_24),
-                    contentDescription = null
+                    contentDescription = stringResource(id = R.string.contentDescriptionApiFilter)
                 )
                 Text(text = stringResource(id = R.string.filter))
             }
@@ -225,7 +192,7 @@ fun ApiServiceScreen(
                         IconButton(content = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_baseline_close_24),
-                                contentDescription = null,
+                                contentDescription = stringResource(id = R.string.contentDescriptionApiDismiss),
                                 tint = MaterialTheme.colorScheme.onBackground
                             )
                         }, onClick = {

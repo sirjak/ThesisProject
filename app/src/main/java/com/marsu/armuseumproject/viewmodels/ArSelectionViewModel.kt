@@ -11,8 +11,8 @@ import com.marsu.armuseumproject.database.Artwork
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * ViewModel for the AR Selection Fragment, retrieves the artwork from the Room database to display
- * in the RecyclerView
+ * ViewModel for the ArSelectionScreen.
+ * Retrieves the artwork from the Room database to display in the LazyColumn.
  */
 open class ArSelectionViewModel(
     application: Application, private val state: SavedStateHandle = SavedStateHandle()

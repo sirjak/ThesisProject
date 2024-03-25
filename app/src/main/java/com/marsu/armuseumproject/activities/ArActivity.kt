@@ -10,8 +10,8 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
-import androidx.navigation.navArgs
 import com.google.ar.core.HitResult
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.Node
@@ -21,11 +21,11 @@ import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 import com.marsu.armuseumproject.R
+import com.marsu.armuseumproject.database.INTENT_EXTRA
+import com.marsu.armuseumproject.database.MAX_IMAGE_HEIGHT
+import com.marsu.armuseumproject.database.MAX_IMAGE_WIDTH
 import com.marsu.armuseumproject.databinding.ActivityArBinding
 import com.marsu.armuseumproject.viewmodels.ArActivityViewModel
-
-const val MAX_IMAGE_HEIGHT = 300
-const val MAX_IMAGE_WIDTH = 300
 
 /**
  * Activity that handles the AR mode of the application. Receives an image URI as a navigation argument
@@ -41,8 +41,6 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
 
     private var viewRenderable: ViewRenderable? = null
     private var intermediateNode: TransformableNode? = null
-
-    private val args: ArActivityArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,10 +76,8 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
             }
         }
 
-        //val uri = args.imageUri.toUri()
-        //Log.d("ARGS", args.toString())
-        val uri = arActivityViewModel.imageUri.value
-        Log.d("URI", uri.toString())
+        val intentExtras = intent.extras
+        val uri = (intentExtras?.getString(INTENT_EXTRA))?.toUri()
 
         binding.arBackButton.setOnClickListener { onBackPressed() }
         binding.arDeleteButton.setOnClickListener { deleteImage() }

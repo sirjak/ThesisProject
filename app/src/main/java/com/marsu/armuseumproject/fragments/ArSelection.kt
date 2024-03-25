@@ -17,19 +17,15 @@ import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.PreferencesManager
+import com.marsu.armuseumproject.database.SHARED_KEY
 import com.marsu.armuseumproject.databinding.FragmentArSelectionBinding
 import com.marsu.armuseumproject.screens.ArSelectionScreen
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
 import java.lang.reflect.Type
 
-const val SHARED_KEY = "LAST_FIVE"
-
 /**
- * Fragment for selecting artwork to be displayed in AR mode. Displays all the artwork saved to the Room database
- * in a RecyclerView. When an artwork has been selected, the 'Start AR' button can be used to navigate to the AR
- * activity with the image uri coming along as a navigation argument. Also saves the artwork to the most recent
- * artworks when navigating to AR mode.
+ * Contains ArSelectionScreen composable.
  */
 
 class ArSelection : Fragment() {
@@ -40,6 +36,7 @@ class ArSelection : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+
         // Retrieving the previously stored list of id's to use it as a base for lastFive
         val preferences = PreferencesManager(MyApp.appContext)
         val json = preferences.getData(SHARED_KEY, null)
@@ -67,7 +64,6 @@ class ArSelection : Fragment() {
                 }
             }
         }
-
         return binding.root
     }
 }

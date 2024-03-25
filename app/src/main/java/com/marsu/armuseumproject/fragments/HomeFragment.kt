@@ -17,6 +17,7 @@ import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.PreferencesManager
+import com.marsu.armuseumproject.database.SHARED_KEY
 import com.marsu.armuseumproject.databinding.FragmentHomeBinding
 import com.marsu.armuseumproject.screens.HomeScreen
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
@@ -24,10 +25,7 @@ import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
 import java.lang.reflect.Type
 
 /**
- * Contains 2 TextViews and RecyclerView.
- * TextViews display a welcome and when first used, short instructions to using the app.
- * After user has tried some artworks on AR, the instructions change to describing below elements to be recently viewed art.
- * RecyclerView displays 5 artworks that have been tried out in AR most recently.
+ * Contains HomeScreen composable
  */
 class HomeFragment : Fragment() {
 
@@ -37,6 +35,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+
         // Retrieving the previously stored list of id's to use it as a base for lastFive
         val preferences = PreferencesManager(MyApp.appContext)
         val json = preferences.getData(SHARED_KEY, null)
@@ -65,9 +64,4 @@ class HomeFragment : Fragment() {
         }
         return binding.root
     }
-    // TODO: Figure out what this part does and if it should be kept
-    /*override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-    }*/
 }

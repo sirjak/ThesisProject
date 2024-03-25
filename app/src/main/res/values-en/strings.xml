@@ -58,4 +58,8 @@
     <string name="title">Title *</string>
     <string name="welcome">Welcome!</string>
     <string name="contentDescriptionSaveFromGallery">Image of a camera with plus symbol in top corner. Clicking the image will open phone gallery for photo selection.</string>
+    <string name="contentDescriptionListItem">Image of the named artwork</string>
+    <string name="contentDescriptionApiDismiss">Icon in shape of X. Click will dismiss filter tag.</string>
+    <string name="contentDescriptionApiFilter">Filter icon. Click will open popup dialog for filter selection.</string>
+    <string name="contentDescriptionApiSearch">Icon in shape of magnifying glass. Click will trigger search with given input.</string>
 </resources>

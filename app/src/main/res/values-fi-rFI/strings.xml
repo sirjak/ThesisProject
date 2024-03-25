@@ -58,4 +58,8 @@
     <string name="title">Nimi *</string>
     <string name="welcome">Tervetuloa!</string>
     <string name="contentDescriptionSaveFromGallery">Kuva kamerasta, jonka yläkulmassa plus-merkki. Kuvan painallus avaa puhelimen gallerian kuvan valintaa varten.</string>
+    <string name="contentDescriptionListItem">Kuva nimetystä taideteoksesta</string>
+    <string name="contentDescriptionApiDismiss">X muotoinen kuvake. Kuvakkeen painallus poistaa tagin ja sitä myöten suodatusken.</string>
+    <string name="contentDescriptionApiFilter">Suodatuskuvake. Kuvakkeen painallus avaa popup ikkunan, josta voi valita suodatuksen hakutuloksille.</string>
+    <string name="contentDescriptionApiSearch">Suurennuslasin kuvake. Kuvakkeen painallus aloittaa hakutoiminnon annetulla syötteellä.</string>
 </resources>

@@ -1,23 +1,15 @@
 package com.marsu.armuseumproject.screens
 
-import android.app.Application
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
-import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -33,48 +25,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.activities.ArActivity
 import com.marsu.armuseumproject.database.Artwork
+import com.marsu.armuseumproject.database.INTENT_EXTRA
 import com.marsu.armuseumproject.database.PreferencesManager
-import com.marsu.armuseumproject.fragments.SHARED_KEY
-import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
+import com.marsu.armuseumproject.database.SHARED_KEY
 import com.marsu.armuseumproject.ui_components.ArtItem
 import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
-import java.lang.reflect.Type
 
-class ArSelectionScreen : ComponentActivity() {
-    private lateinit var arSelectionViewModel: ArSelectionViewModel
-    private var lastFive = mutableListOf<Int>() // initiate variable
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arSelectionViewModel = ArSelectionViewModel(Application())
-
-        val preferences = PreferencesManager(MyApp.appContext)
-        val json = preferences.getData(SHARED_KEY, null)
-        val type: Type = object : TypeToken<List<Int>>() {}.type
-        if (json != null) {
-            lastFive = Gson().fromJson(json, type)
-        }
-
-        setContent {
-            ARMuseumProjectTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
-                ) {
-                    ArSelectionScreen(
-                        lastFive = lastFive, viewModel = arSelectionViewModel
-                    )
-                }
-            }
-        }
-    }
-}
-
+/**
+ * Composable for selecting artwork to be displayed in AR mode. Displays all the artwork saved to the Room database
+ * in a LazyColumn. When an artwork has been selected, the 'Start AR' button can be used to navigate to the AR
+ * activity with the image uri coming along as intent extra. Also saves the artwork to the most recent
+ * artworks when navigating to AR mode.
+ */
 @Composable
 fun ArSelectionScreen(
     lastFive: MutableList<Int>, viewModel: ArSelectionViewModel
@@ -100,15 +66,18 @@ fun ArSelectionScreen(
         viewModel.saveId(null)
     }
 
-    // Handling preselection when navigated from HomeScreen by clicking an ArtItem
-    if (preselectId !== null) {
-        val art = viewModel.getArt(preselectId!!).observeAsState().value
-        art?.get(0)?.let { selectArt(it) }
-    }
-
     fun postValuesToViewModel(id: Int, uri: Uri) {
         viewModel.imageUri.postValue(uri)
         viewModel.imageId.postValue(id)
+    }
+
+    // Handling preselection when navigated from HomeScreen by clicking an ArtItem
+    if (preselectId !== null) {
+        val art = viewModel.getArt(preselectId!!).observeAsState().value
+        art?.get(0)?.let {
+            selectArt(it)
+            postValuesToViewModel(it.objectID, it.primaryImage.toUri())
+        }
     }
 
     // Saving latest watched artwork id into MutableList<Int>
@@ -131,7 +100,6 @@ fun ArSelectionScreen(
     // Converts lastFive (list of Artwork id's) to a json and stores to shared preferences
     fun addToSharedPrefs() {
         val storedLastFive = Gson().toJson(lastFive)
-        Log.d("STORED", storedLastFive)
         preferencesManager.saveData(SHARED_KEY, storedLastFive)
     }
 
@@ -167,7 +135,9 @@ fun ArSelectionScreen(
                     addToList(id)
                     addToSharedPrefs()
                 }
-                context.startActivity(Intent(context, ArActivity::class.java))
+                val intent = Intent(context, ArActivity::class.java)
+                intent.putExtra(INTENT_EXTRA, viewModel.imageUri.value.toString())
+                context.startActivity(Intent(intent))
             }, modifier = Modifier.padding(all = 20.dp)
         ) {
             Text(text = stringResource(id = R.string.start_ar))
