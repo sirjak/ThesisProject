@@ -8,17 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
-import com.marsu.armuseumproject.R
 import com.marsu.armuseumproject.database.PreferencesManager
 import com.marsu.armuseumproject.database.SHARED_KEY
-import com.marsu.armuseumproject.databinding.FragmentArSelectionBinding
 import com.marsu.armuseumproject.screens.ArSelectionScreen
 import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
 import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
@@ -45,25 +43,20 @@ class ArSelection : Fragment() {
             lastFive = Gson().fromJson(json, type)
         }
 
-        val binding = DataBindingUtil.inflate<FragmentArSelectionBinding>(
-            inflater, R.layout.fragment_ar_selection, container, false
-        ).apply {
-            composeView.apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    ARMuseumProjectTheme {
-                        Surface(
-                            color = MaterialTheme.colorScheme.background,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            ArSelectionScreen(
-                                lastFive = lastFive, viewModel = viewModel
-                            )
-                        }
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                ARMuseumProjectTheme {
+                    Surface(
+                        color = MaterialTheme.colorScheme.background,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        ArSelectionScreen(
+                            lastFive = lastFive, viewModel = viewModel
+                        )
                     }
                 }
             }
         }
-        return binding.root
     }
 }
