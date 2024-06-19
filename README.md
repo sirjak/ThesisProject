@@ -1,35 +1,9 @@
-# ARMuseum
-Try out how paintings would look like on your very own wall utilizing Internal Storage, ARCore, a gravity sensor and paintings from [The Metropolitan Museum of Art Collection API](https://metmuseum.github.io/).
+# Thesis
+In my thesis, I took a View-based Android application, ARMuseum, to migrate it into Compose components. Unfortunately, I ran out of time during the migration process and was unable to fully finish it during the time allocated for my thesis. However, I do plan on continuing with the migration alongside my job hunt during this summer but the results from it won't make it to the actual thesis as it has already been published.
 
-<p>
-  <img src="images/home_tab.png" height="300">
-  <img src="images/add_tab.png" height="300">
-  <img src="images/museum_tab.png" height="300">
-  <img src="images/art_info_tab.png" height="300">
-   <img src="images/ar_tab.png" height="300">
-</p>
-
-## Features
-ARMuseum does not require any registration in order to fully experience the application.
--	See the most recently browsed images in the Home tab
--	Save images to Room database via the Add tab
--	Browse historical artwork via the Museum tab
--	Utilize the AR tab to see what the images would look like on a wall
-
-## Technical requirements
--	Android 8.0 (API level 26)
--	Permission to access gallery and camera
--	Gravity sensor
--	Internet connection
-
-## Installation
-Download the .apk file from [here](https://github.com/metropolia-ar/ARMuseumProject/releases/tag/1.0) to your Android phone and install it. Optionally, the source code can also be downloaded from the provided link.
+## Useful links
+[Original ARMuseum repo](https://github.com/metropolia-ar/ARMuseumProject)
+[Thesis publication](https://www.theseus.fi/handle/10024/855215) (in Finnish, only abstract in English)
 
 ## License
 The application is under the MIT License.
-
-## Developers
-- [Markus Nivasalo](https://github.com/markusniv)
-- [Oskari Arponen](https://github.com/AOskari)
-- [Jani Salo](https://github.com/Janiksa)
-- [Sirja Kosonen](https://github.com/sirjak)
