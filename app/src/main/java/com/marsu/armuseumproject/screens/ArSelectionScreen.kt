@@ -27,7 +27,7 @@ import androidx.core.net.toUri
 import com.google.gson.Gson
 import com.marsu.armuseumproject.MyApp
 import com.marsu.armuseumproject.R
-import com.marsu.armuseumproject.activities.ArActivity
+//import com.marsu.armuseumproject.activities.ArActivity
 import com.marsu.armuseumproject.database.Artwork
 import com.marsu.armuseumproject.database.INTENT_EXTRA
 import com.marsu.armuseumproject.database.PreferencesManager
@@ -43,7 +43,7 @@ import com.marsu.armuseumproject.viewmodels.ArSelectionViewModel
  */
 @Composable
 fun ArSelectionScreen(
-    lastFive: MutableList<Int>, viewModel: ArSelectionViewModel
+    lastFive: MutableList<Int>, onNavigate: (Int) -> Unit, viewModel: ArSelectionViewModel
 ) {
     val preferencesManager = remember { PreferencesManager(MyApp.appContext) }
     val context = LocalContext.current
@@ -135,9 +135,10 @@ fun ArSelectionScreen(
                     addToList(id)
                     addToSharedPrefs()
                 }
-                val intent = Intent(context, ArActivity::class.java)
-                intent.putExtra(INTENT_EXTRA, viewModel.imageUri.value.toString())
-                context.startActivity(Intent(intent))
+                onNavigate(R.id.navigation)
+                //val intent = Intent(context, ArActivity::class.java)
+                //intent.putExtra(INTENT_EXTRA, viewModel.imageUri.value.toString())
+                //context.startActivity(Intent(intent))
             }, modifier = Modifier.padding(all = 20.dp)
         ) {
             Text(text = stringResource(id = R.string.start_ar))

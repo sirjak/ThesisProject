@@ -1,5 +1,21 @@
 package com.marsu.armuseumproject.activities
 
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.navigation.fragment.findNavController
+import com.marsu.armuseumproject.fragments.ArSelectionDirections
+import com.marsu.armuseumproject.screens.ArScreen
+import com.marsu.armuseumproject.screens.ArSelectionScreen
+import com.marsu.armuseumproject.ui.theme.ARMuseumProjectTheme
+
+/*
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -27,29 +43,45 @@ import com.marsu.armuseumproject.database.MAX_IMAGE_WIDTH
 import com.marsu.armuseumproject.databinding.ActivityArBinding
 import com.marsu.armuseumproject.viewmodels.ArActivityViewModel
 
+*/
 /**
  * Activity that handles the AR mode of the application. Receives an image URI as a navigation argument
  * that is then displayable on the screen at spots SceneForm deems applicable. Also contains usage
  * of gravity sensor to check whether the phone is held in an upright position, and disallows adding
  * an image if it is not.
  */
-class ArActivity : AppCompatActivity(), SensorEventListener {
 
-    private lateinit var arFrag: ArFragment
-    private lateinit var binding: ActivityArBinding
-    private lateinit var arActivityViewModel: ArActivityViewModel
+class ArActivity : AppCompatActivity()/*, SensorEventListener*/ {
 
-    private var viewRenderable: ViewRenderable? = null
-    private var intermediateNode: TransformableNode? = null
+    //private lateinit var arFrag: ArFragment
+    //private lateinit var binding: ActivityArBinding
+    //private lateinit var arActivityViewModel: ArActivityViewModel
+
+    //private var viewRenderable: ViewRenderable? = null
+    //private var intermediateNode: TransformableNode? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityArBinding.inflate(layoutInflater)
-        arActivityViewModel = ArActivityViewModel(application)
+
+            setContent {
+                ARMuseumProjectTheme {
+                    Surface(
+                        color = MaterialTheme.colorScheme.background,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        ArScreen()
+                    }
+                }
+            }
+        }
+    }
+        //binding = ActivityArBinding.inflate(layoutInflater)
+        //arActivityViewModel = ArActivityViewModel(application)
+
+/*
         val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val sensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
         registerSensor(sensorManager, sensor)
-
         val view = binding.root
         setContentView(view)
 
@@ -126,9 +158,11 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
-    /**
+    */
+/**
      *  Delete image currently placed on the screen
-     */
+     *//*
+
     private fun deleteImage() {
         if (arActivityViewModel.currentImageNode.value != null && intermediateNode != null) {
             intermediateNode!!.removeChild(arActivityViewModel.currentImageNode.value)
@@ -137,9 +171,11 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
-    /**
+    */
+/**
      * Register gravity sensor
-     */
+     *//*
+
     private fun registerSensor(sensorManager: SensorManager, sensor: Sensor?) {
         if (sensor != null) {
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
@@ -149,9 +185,11 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
-    /**
+    */
+/**
      * When gravity sensor detects change, send data to viewModel to calculate if phone is upright
-     */
+     *//*
+
     override fun onSensorChanged(p0: SensorEvent?) {
         Log.d("ON_SENSOR_CHANGED", p0?.values.contentToString())
         arActivityViewModel.calculateGravityData(
@@ -159,11 +197,13 @@ class ArActivity : AppCompatActivity(), SensorEventListener {
         )
     }
 
-    /**
+    */
+/**
      * Mandatory override for SensorEventListener
-     */
+     *//*
+
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
         Log.d("ON_ACCURACY_CHANGED_SENSOR", p0.toString())
         Log.d("ON_ACCURACY_CHANGED_CHANGE", p1.toString())
     }
-}
+}*/

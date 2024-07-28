@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.marsu.armuseumproject.MyApp
@@ -52,7 +53,13 @@ class ArSelection : Fragment() {
                         modifier = Modifier.fillMaxSize()
                     ) {
                         ArSelectionScreen(
-                            lastFive = lastFive, viewModel = viewModel
+                            lastFive = lastFive, { _ ->
+                                findNavController().navigate(
+                                    ArSelectionDirections.actionArSelectionToArActivity(
+                                        viewModel.imageUri.toString()
+                                    )
+                                )
+                            }, viewModel = viewModel
                         )
                     }
                 }

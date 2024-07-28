@@ -74,7 +74,8 @@ dependencies {
     implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
 
     // AR
-    implementation 'com.gorisse.thomas.sceneform:sceneform:1.23.0'
+    //implementation 'com.gorisse.thomas.sceneform:sceneform:1.23.0'
+    implementation 'io.github.sceneview:arsceneview:2.0.3'
 
     // Compose
     def composeBom = platform('androidx.compose:compose-bom:2024.01.00')
